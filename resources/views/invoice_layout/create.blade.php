@@ -427,7 +427,23 @@
               {!! Form::checkbox('contact_custom_fields[]', 'custom_field4', false, ['class' => 'input-icheck']); !!} {{ $custom_labels['contact']['custom_field_4'] ?? __('lang_v1.contact_custom_field4') }}</label>
           </div>
         </div>
-      </div>        
+      </div>  
+      <div class="col-sm-3">
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              {!! Form::checkbox('contact_custom_fields[]', 'custom_field5', false, ['class' => 'input-icheck']); !!} {{ $custom_labels['contact']['custom_field_5'] ?? __('lang_v1.contact_custom_field5') }}</label>
+          </div>
+        </div>
+      </div>     
+      <div class="col-sm-3">
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              {!! Form::checkbox('contact_custom_fields[]', 'custom_field6', false, ['class' => 'input-icheck']); !!} {{ $custom_labels['contact']['custom_field_6'] ?? __('lang_v1.contact_custom_field6') }}</label>
+          </div>
+        </div>
+      </div>       
     </div>
     <div class="row hide-for-letterhead">
         <div class="col-sm-12">

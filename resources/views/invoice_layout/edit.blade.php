@@ -255,7 +255,10 @@
         $sell_custom_field_3_label = !empty($custom_labels['sell']['custom_field_3']) ? $custom_labels['sell']['custom_field_3'] : '';
 
         $sell_custom_field_4_label = !empty($custom_labels['sell']['custom_field_4']) ? $custom_labels['sell']['custom_field_4'] : '';
-      @endphp
+        $sell_custom_field_5_label = !empty($custom_labels['sell']['custom_field_5']) ? $custom_labels['sell']['custom_field_5'] : '';
+        $sell_custom_field_6_label = !empty($custom_labels['sell']['custom_field_6']) ? $custom_labels['sell']['custom_field_6'] : '';
+
+        @endphp
         @if (!empty($sell_custom_field_1_label))
         <div class="col-sm-3">
           <div class="form-group">
@@ -428,7 +431,40 @@
               {!! Form::checkbox('contact_custom_fields[]', 'custom_field4', in_array('custom_field4', $contact_custom_fields), ['class' => 'input-icheck']); !!} {{ $custom_labels['contact']['custom_field_4'] ?? __('lang_v1.contact_custom_field4') }}</label>
           </div>
         </div>
-      </div>        
+      </div>  
+      
+      
+
+      <div class="col-sm-3">
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              {!! Form::checkbox('contact_custom_fields[]', 'custom_field5', in_array('custom_field5', $contact_custom_fields), ['class' => 'input-icheck']); !!} {{ $custom_labels['contact']['custom_field_5'] ?? __('lang_v1.contact_custom_field5') }}</label>
+          </div>
+        </div>
+      </div>  
+
+      
+
+      <div class="col-sm-3">
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              {!! Form::checkbox('contact_custom_fields[]', 'custom_field6', in_array('custom_field6', $contact_custom_fields), ['class' => 'input-icheck']); !!} {{ $custom_labels['contact']['custom_field_6'] ?? __('lang_v1.contact_custom_field6') }}</label>
+          </div>
+        </div>
+      </div>  
+
+      
+
+      <div class="col-sm-3">
+        <div class="form-group">
+          <div class="checkbox">
+            <label>
+              {!! Form::checkbox('contact_custom_fields[]', 'custom_field7', in_array('custom_field7', $contact_custom_fields), ['class' => 'input-icheck']); !!} {{ $custom_labels['contact']['custom_field_7'] ?? __('lang_v1.contact_custom_field7') }}</label>
+          </div>
+        </div>
+      </div>  
 
       </div>
       <div class="row hide-for-letterhead">

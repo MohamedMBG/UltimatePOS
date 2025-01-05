@@ -87,21 +87,21 @@
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                {!! Form::label('contact_custom_field_5_label', __('lang_v1.custom_field', ['number' => 5])); !!}
+                {!! Form::label('contact_custom_field_5_label', __('lang_v1.contact_custom_field5')); !!}
                 {!! Form::text('custom_labels[contact][custom_field_5]', !empty($custom_labels['contact']['custom_field_5']) ? $custom_labels['contact']['custom_field_5'] : null,
                 ['class' => 'form-control', 'id' => 'contact_custom_field_5_label']); !!}
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                {!! Form::label('contact_custom_field_6_label', __('lang_v1.custom_field', ['number' => 6])); !!}
+                {!! Form::label('contact_custom_field_6_label', __('lang_v1.contact_custom_field6')); !!}
                 {!! Form::text('custom_labels[contact][custom_field_6]', !empty($custom_labels['contact']['custom_field_6']) ? $custom_labels['contact']['custom_field_6'] : null,
                 ['class' => 'form-control', 'id' => 'contact_custom_field_6_label']); !!}
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                {!! Form::label('contact_custom_field_7_label', __('lang_v1.custom_field', ['number' => 7])); !!}
+                {!! Form::label('contact_custom_field_7_label', __('lang_v1.contact_custom_field7')); !!}
                 {!! Form::text('custom_labels[contact][custom_field_7]', !empty($custom_labels['contact']['custom_field_7']) ? $custom_labels['contact']['custom_field_7'] : null,
                 ['class' => 'form-control', 'id' => 'contact_custom_field_7_label']); !!}
             </div>

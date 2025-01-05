@@ -194,10 +194,10 @@
                                     {{ $custom_labels['contact']['custom_field_4'] ?? __('lang_v1.contact_custom_field4') }}
                                 </th>
                                 <th>
-                                    {{ $custom_labels['contact']['custom_field_5'] ?? __('lang_v1.custom_field', ['number' => 5]) }}
+                                    {{ $custom_labels['contact']['custom_field_5'] ?? __('lang_v1.contact_custom_field5') }}
                                 </th>
                                 <th>
-                                    {{ $custom_labels['contact']['custom_field_6'] ?? __('lang_v1.custom_field', ['number' => 6]) }}
+                                    {{ $custom_labels['contact']['custom_field_6'] ??  __('lang_v1.contact_custom_field6')  }}
                                 </th>
                                 <th>
                                     {{ $custom_labels['contact']['custom_field_7'] ?? __('lang_v1.custom_field', ['number' => 7]) }}

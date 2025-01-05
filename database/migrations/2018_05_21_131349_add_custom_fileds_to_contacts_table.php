@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('custom_field2')->nullable()->after('custom_field1');
             $table->string('custom_field3')->nullable()->after('custom_field2');
             $table->string('custom_field4')->nullable()->after('custom_field3');
+            //i am the on who added this
+            //$table->string('custom_field5')->nullable()->after('custom_field4');
         });
     }
 

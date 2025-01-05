@@ -618,6 +618,7 @@ class ContactController extends Controller
                 $input['export_custom_field_4'] = $request->input('export_custom_field_4');
                 $input['export_custom_field_5'] = $request->input('export_custom_field_5');
                 $input['export_custom_field_6'] = $request->input('export_custom_field_6');
+                $input['export_custom_field_7'] = $request->input('export_custom_field_7');
             }
 
             if (! empty($input['dob'])) {
@@ -1208,6 +1209,9 @@ class ContactController extends Controller
                     $contact_array['custom_field2'] = $value[24];
                     $contact_array['custom_field3'] = $value[25];
                     $contact_array['custom_field4'] = $value[26];
+                    $contact_array['custom_field5'] = $value[27];
+                    $contact_array['custom_field6'] = $value[28];
+                    $contact_array['custom_field7'] = $value[29];
 
                     $formated_data[] = $contact_array;
                 }

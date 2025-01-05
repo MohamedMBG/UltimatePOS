@@ -31,21 +31,21 @@
 @endif
 
 @if(!empty($contact->custom_field5))
-    <strong>{{ $custom_labels['contact']['custom_field_5'] ?? __('lang_v1.custom_field', ['number' => 5]) }}</strong>
+    <strong>{{ $custom_labels['contact']['custom_field_5'] ?? __('lang_v1.contact_custom_field5') }}</strong>
     <p class="text-muted">
         {{ $contact->custom_field5 }}
     </p>
 @endif
 
 @if(!empty($contact->custom_field6))
-    <strong>{{ $custom_labels['contact']['custom_field_6'] ?? __('lang_v1.custom_field', ['number' => 6]) }}</strong>
+    <strong>{{ $custom_labels['contact']['custom_field_6'] ?? __('lang_v1.contact_custom_field6') }}</strong>
     <p class="text-muted">
         {{ $contact->custom_field6 }}
     </p>
 @endif
 
 @if(!empty($contact->custom_field7))
-    <strong>{{ $custom_labels['contact']['custom_field_7'] ?? __('lang_v1.custom_field', ['number' => 7]) }}</strong>
+    <strong>{{ $custom_labels['contact']['custom_field_7'] ?? __('lang_v1.contact_custom_field7') }}</strong>
     <p class="text-muted">
         {{ $contact->custom_field7 }}
     </p>

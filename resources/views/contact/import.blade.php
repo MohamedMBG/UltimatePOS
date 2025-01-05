@@ -206,6 +206,11 @@
                         <td>{{ $custom_labels['contact']['custom_field_4'] ?? __('lang_v1.contact_custom_field4') }} <small class="text-muted">(@lang('lang_v1.optional'))</small></td>
                         <td>&nbsp;</td>
                     </tr>
+                    <tr>
+                        <td>28</td>
+                        <td>{{ $custom_labels['contact']['custom_field_5'] ?? __('lang_v1.contact_custom_field5') }} <small class="text-muted">(@lang('lang_v1.optional'))</small></td>
+                        <td>&nbsp;</td>
+                    </tr>
                 </table>
             @endcomponent
         </div>

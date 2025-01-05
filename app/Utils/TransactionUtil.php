@@ -83,6 +83,8 @@ class TransactionUtil extends Util
             'custom_field_2' => ! empty($input['custom_field_2']) ? $input['custom_field_2'] : null,
             'custom_field_3' => ! empty($input['custom_field_3']) ? $input['custom_field_3'] : null,
             'custom_field_4' => ! empty($input['custom_field_4']) ? $input['custom_field_4'] : null,
+            // i am who added the line of the 5th custom field
+            'custom_field_5' => ! empty($input['custom_field_5']) ? $input['custom_field_5'] : null,
             'is_direct_sale' => ! empty($input['is_direct_sale']) ? $input['is_direct_sale'] : 0,
             'commission_agent' => $input['commission_agent'] ?? null,
             'is_quotation' => isset($input['is_quotation']) ? $input['is_quotation'] : 0,
@@ -1140,7 +1142,28 @@ class TransactionUtil extends Util
                 if (! empty($contact_custom_labels['custom_field_4'])) {
                     $temp[] = $contact_custom_labels['custom_field_4'].': '.$customer->custom_field4;
                 } else {
-                    $temp[] = $customer->custom_field1;
+                    $temp[] = $customer->custom_field4;
+                }
+            }
+            if (! empty($customer->custom_field5) && in_array('custom_field5', $customer_custom_fields_settings)) {
+                if (! empty($contact_custom_labels['custom_field_5'])) {
+                    $temp[] = $contact_custom_labels['custom_field_5'].': '.$customer->custom_field5;
+                } else {
+                    $temp[] = $customer->custom_field5;
+                }
+            }
+            if (! empty($customer->custom_field6) && in_array('custom_field6', $customer_custom_fields_settings)) {
+                if (! empty($contact_custom_labels['custom_field_6'])) {
+                    $temp[] = $contact_custom_labels['custom_field_6'].': '.$customer->custom_field6;
+                } else {
+                    $temp[] = $customer->custom_field6;
+                }
+            }
+            if (! empty($customer->custom_field7) && in_array('custom_field7', $customer_custom_fields_settings)) {
+                if (! empty($contact_custom_labels['custom_field_7'])) {
+                    $temp[] = $contact_custom_labels['custom_field_7'].': '.$customer->custom_field7;
+                } else {
+                    $temp[] = $customer->custom_field7;
                 }
             }
             if (! empty($temp)) {
