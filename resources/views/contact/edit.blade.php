@@ -362,48 +362,70 @@
         $contact_custom_field9 = !empty($custom_labels['contact']['custom_field_9']) ? $custom_labels['contact']['custom_field_9'] : __('lang_v1.custom_field', ['number' => 9]);
         $contact_custom_field10 = !empty($custom_labels['contact']['custom_field_10']) ? $custom_labels['contact']['custom_field_10'] : __('lang_v1.custom_field', ['number' => 10]);
       @endphp
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('custom_field1', $contact_custom_field1 . ':') !!}
-            {!! Form::text('custom_field1', $contact->custom_field1, ['class' => 'form-control', 
-                'placeholder' => $contact_custom_field1]); !!}
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('custom_field2', $contact_custom_field2 . ':') !!}
+      <table class="table table-bordered">
+        <div class="col-md-3">
+        <thead>
+            <tr>
+                <th>V.L</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{!! Form::label('custom_field1', $contact_custom_field1 . ':') !!}</td>
+                <td>
+                 {!! Form::text('custom_field1', $contact->custom_field1, ['class' => 'form-control', 
+                'placeholder' => $contact_custom_field1]); !!}</td>
+            </tr>
+            <tr>
+                <td>{!! Form::label('custom_field2', $contact_custom_field2 . ':') !!}</td>
+                <td>
+                
             {!! Form::text('custom_field2', $contact->custom_field2, ['class' => 'form-control', 
                 'placeholder' => $contact_custom_field2]); !!}
+                </td>
+            </tr>
+        </tbody>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('custom_field3', $contact_custom_field3 . ':') !!}
-            {!! Form::text('custom_field3', $contact->custom_field3, ['class' => 'form-control', 
-                'placeholder' => $contact_custom_field3]); !!}
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('custom_field4', $contact_custom_field4 . ':') !!}
-            {!! Form::text('custom_field4', $contact->custom_field4, ['class' => 'form-control', 
-                'placeholder' => $contact_custom_field4]); !!}
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('custom_field5', $contact_custom_field5 . ':') !!}
-            {!! Form::text('custom_field5', $contact->custom_field5, ['class' => 'form-control', 
-                'placeholder' => $contact_custom_field5]); !!}
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-            {!! Form::label('custom_field6', $contact_custom_field6 . ':') !!}
-            {!! Form::text('custom_field6', $contact->custom_field6, ['class' => 'form-control', 
-                'placeholder' => $contact_custom_field6]); !!}
-        </div>
-      </div>
+      </table>
+      <table class="table table-bordered">
+        <div class="col-md-3">
+            <thead>
+                <th>V.P</th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{!! Form::label('custom_field3', $contact_custom_field3 . ':') !!}</td>
+                    <td>{!! Form::text('custom_field3', $contact->custom_field3, ['class' => 'form-control', 
+                        'placeholder' => $contact_custom_field3]); !!}</td>
+                </tr>
+                <tr>
+                    <td>{!! Form::label('custom_field4', $contact_custom_field4 . ':') !!}</td>
+                    <td>{!! Form::text('custom_field4', $contact->custom_field4, ['class' => 'form-control', 
+                        'placeholder' => $contact_custom_field4]); !!}</td>
+                </tr>
+            </tbody>
+            </div>
+      </table>
+      <table class="table table-bordered">
+        <thead>
+            <th>E.P</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{!! Form::label('custom_field5', $contact_custom_field5 . ':') !!}</td>
+                <td>{!! Form::text('custom_field5', $contact->custom_field5, ['class' => 'form-control', 
+                    'placeholder' => $contact_custom_field5]); !!}</td>
+            </tr>
+            <tr>
+                <td>{!! Form::label('custom_field6', $contact_custom_field6 . ':') !!}</td>
+                <td>{!! Form::text('custom_field6', $contact->custom_field6, ['class' => 'form-control', 
+                    'placeholder' => $contact_custom_field6]); !!}</td>
+            </tr>
+        </tbody>
+      </table>
       <div class="col-md-3">
         <div class="form-group">
             {!! Form::label('custom_field7', $contact_custom_field7 . ':') !!}

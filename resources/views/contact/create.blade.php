@@ -357,88 +357,114 @@
             <hr/>
           </div>
           @php
-            $custom_labels = json_decode(session('business.custom_labels'), true);
-            $contact_custom_field1 = !empty($custom_labels['contact']['custom_field_1']) ? $custom_labels['contact']['custom_field_1'] : __('lang_v1.contact_custom_field1');
-            $contact_custom_field2 = !empty($custom_labels['contact']['custom_field_2']) ? $custom_labels['contact']['custom_field_2'] : __('lang_v1.contact_custom_field2');
-            $contact_custom_field3 = !empty($custom_labels['contact']['custom_field_3']) ? $custom_labels['contact']['custom_field_3'] : __('lang_v1.contact_custom_field3');
-            $contact_custom_field4 = !empty($custom_labels['contact']['custom_field_4']) ? $custom_labels['contact']['custom_field_4'] : __('lang_v1.contact_custom_field4');
-            $contact_custom_field5 = !empty($custom_labels['contact']['custom_field_5']) ? $custom_labels['contact']['custom_field_5'] : __('lang_v1.contact_custom_field5');
-            $contact_custom_field6 = !empty($custom_labels['contact']['custom_field_6']) ? $custom_labels['contact']['custom_field_6'] : __('lang_v1.contact_custom_field6');
-            $contact_custom_field7 = !empty($custom_labels['contact']['custom_field_7']) ? $custom_labels['contact']['custom_field_7'] : __('lang_v1.contact_custom_field7');
-            $contact_custom_field8 = !empty($custom_labels['contact']['custom_field_8']) ? $custom_labels['contact']['custom_field_8'] : __('lang_v1.custom_field', ['number' => 8]);
-            $contact_custom_field9 = !empty($custom_labels['contact']['custom_field_9']) ? $custom_labels['contact']['custom_field_9'] : __('lang_v1.custom_field', ['number' => 9]);
-            $contact_custom_field10 = !empty($custom_labels['contact']['custom_field_10']) ? $custom_labels['contact']['custom_field_10'] : __('lang_v1.custom_field', ['number' => 10]);
-          @endphp
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field1', $contact_custom_field1 . ':') !!}
-                {!! Form::text('custom_field1', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field1]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field2', $contact_custom_field2 . ':') !!}
-                {!! Form::text('custom_field2', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field2]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field3', $contact_custom_field3 . ':') !!}
-                {!! Form::text('custom_field3', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field3]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field4', $contact_custom_field4 . ':') !!}
-                {!! Form::text('custom_field4', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field4]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field5', $contact_custom_field5 . ':') !!}
-                {!! Form::text('custom_field5', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field5]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field6', $contact_custom_field6 . ':') !!}
-                {!! Form::text('custom_field6', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field6]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field7', $contact_custom_field7 . ':') !!}
-                {!! Form::text('custom_field7', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field7]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field8', $contact_custom_field8 . ':') !!}
-                {!! Form::text('custom_field8', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field8]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field9', $contact_custom_field9 . ':') !!}
-                {!! Form::text('custom_field9', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field9]); !!}
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('custom_field10', $contact_custom_field10 . ':') !!}
-                {!! Form::text('custom_field10', null, ['class' => 'form-control', 
-                    'placeholder' => $contact_custom_field10]); !!}
-            </div>
-          </div>
+    $custom_labels = json_decode(session('business.custom_labels'), true);
+    $contact_custom_field1 = !empty($custom_labels['contact']['custom_field_1']) ? $custom_labels['contact']['custom_field_1'] : __('lang_v1.contact_custom_field1');
+    $contact_custom_field2 = !empty($custom_labels['contact']['custom_field_2']) ? $custom_labels['contact']['custom_field_2'] : __('lang_v1.contact_custom_field2');
+    $contact_custom_field3 = !empty($custom_labels['contact']['custom_field_3']) ? $custom_labels['contact']['custom_field_3'] : __('lang_v1.contact_custom_field3');
+    $contact_custom_field4 = !empty($custom_labels['contact']['custom_field_4']) ? $custom_labels['contact']['custom_field_4'] : __('lang_v1.contact_custom_field4');
+    $contact_custom_field5 = !empty($custom_labels['contact']['custom_field_5']) ? $custom_labels['contact']['custom_field_5'] : __('lang_v1.contact_custom_field5');
+    $contact_custom_field6 = !empty($custom_labels['contact']['custom_field_6']) ? $custom_labels['contact']['custom_field_6'] : __('lang_v1.contact_custom_field6');
+    $contact_custom_field7 = !empty($custom_labels['contact']['custom_field_7']) ? $custom_labels['contact']['custom_field_7'] : __('lang_v1.contact_custom_field7');
+    $contact_custom_field8 = !empty($custom_labels['contact']['custom_field_8']) ? $custom_labels['contact']['custom_field_8'] : __('lang_v1.custom_field', ['number' => 8]);
+    $contact_custom_field9 = !empty($custom_labels['contact']['custom_field_9']) ? $custom_labels['contact']['custom_field_9'] : __('lang_v1.custom_field', ['number' => 9]);
+    $contact_custom_field10 = !empty($custom_labels['contact']['custom_field_10']) ? $custom_labels['contact']['custom_field_10'] : __('lang_v1.custom_field', ['number' => 10]);
+@endphp
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>V.L</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field1 }}:</td>
+            <td>{!! Form::text('custom_field1', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field1]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field2 }}:</td>
+            <td>{!! Form::text('custom_field2', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field2]) !!}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>V.P</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field3 }}:</td>
+            <td>{!! Form::text('custom_field3', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field3]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field4 }}:</td>
+            <td>{!! Form::text('custom_field4', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field4]) !!}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>E.P</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field5 }}:</td>
+            <td>{!! Form::text('custom_field5', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field5]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field6 }}:</td>
+            <td>{!! Form::text('custom_field6', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field6]) !!}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>H.P</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field7 }}:</td>
+            <td>{!! Form::text('custom_field7', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field7]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field8 }}:</td>
+            <td>{!! Form::text('custom_field8', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field8]) !!}</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>@lang('lang_v1.field_label')</th>
+            <th>@lang('lang_v1.input_field')</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field9 }}:</td>
+            <td>{!! Form::text('custom_field9', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field9]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field10 }}:</td>
+            <td>{!! Form::text('custom_field10', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field10]) !!}</td>
+        </tr>
+    </tbody>
+</table>
+
           <div class="col-md-12 shipping_addr_div"><hr></div>
           <div class="col-md-8 col-md-offset-2 shipping_addr_div mb-10" >
               <strong>{{__('lang_v1.shipping_address')}}</strong><br>
