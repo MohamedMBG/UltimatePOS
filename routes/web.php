@@ -60,6 +60,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VariationTemplateController;
 use App\Http\Controllers\WarrantyController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,6 +139,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::resource('ledger-discount', LedgerDiscountController::class)->only('edit', 'destroy', 'store', 'update');
 
     Route::post('check-mobile', [ContactController::class, 'checkMobile']);
+    Route::get('/contacts/data', [ContactController::class, 'data'])->name('contacts.data');
+    Route::post('contacts/', [ContactController::class, 'store'])->name('contacts.store');
     Route::get('/get-contact-due/{contact_id}', [ContactController::class, 'getContactDue']);
     Route::get('/contacts/payments/{contact_id}', [ContactController::class, 'getContactPayments']);
     Route::get('/contacts/map', [ContactController::class, 'contactMap']);
@@ -234,6 +237,9 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     Route::resource('pos', SellPosController::class);
 
+    Route::get('/get-total-unread', [NotificationController::class, 'getTotalUnread'])->name('getTotalUnread');
+
+
     Route::resource('roles', RoleController::class);
 
     Route::resource('users', ManageUserController::class);
@@ -246,6 +252,8 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     //Invoice schemes..
     Route::get('/invoice-schemes/set_default/{id}', [InvoiceSchemeController::class, 'setDefault']);
     Route::resource('invoice-schemes', InvoiceSchemeController::class);
+
+    
 
     //Print Labels
     Route::get('/labels/show', [LabelsController::class, 'show']);
@@ -356,6 +364,11 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
 
     //Customer Groups
     Route::resource('customer-group', CustomerGroupController::class);
+
+    // manual invoice
+    Route::get('/sells/manual', [App\Http\Controllers\ManualSellController::class, 'create'])->name('sells.manual');
+    Route::post('/sells/manual', [App\Http\Controllers\ManualSellController::class, 'store'])->name('sells.manual.store');
+
 
     //Import opening stock
     Route::get('/import-opening-stock', [ImportOpeningStockController::class, 'index']);
@@ -517,3 +530,13 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
     Route::get('/sells/invoice-url/{id}', [SellPosController::class, 'showInvoiceUrl']);
     Route::get('/show-notification/{id}', [HomeController::class, 'showNotification']);
 });
+
+// //added routes for manual invoice
+// Route::get('/sells/manual', [App\Http\Controllers\ManualSellController::class, 'index'])->name('sells.manual');
+// Route::post('/sells/manual', [App\Http\Controllers\ManualSellController::class, 'store'])->name('sells.manual.store');
+// Route::get('/sells/manual/product-row', [App\Http\Controllers\ManualSellController::class, 'getProductRow'])->name('sells.manual.product_row');
+// Route::get('/sells/get-invoice-number', [App\Http\Controllers\ManualSellController::class, 'getInvoiceNumber'])->name('sells.get_invoice_number');
+// // Add these routes to your routes/web.php file
+// // Add these routes for the manual sell functionality
+// Route::get('/sells/manual', 'App\Http\Controllers\ManualSellController@create')->name('sells.manual');
+// Route::post('/sells/manual', 'App\Http\Controllers\ManualSellController@store')->name('sells.manual.store');

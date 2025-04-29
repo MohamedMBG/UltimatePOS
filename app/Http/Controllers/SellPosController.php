@@ -116,39 +116,109 @@ class SellPosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        if (!auth()->user()->can('sell.view') && !auth()->user()->can('sell.create')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $business_id = request()->session()->get('user.business_id');
-
-        $business_locations = BusinessLocation::forDropdown($business_id, false);
-        $customers = Contact::customersDropdown($business_id, false);
-
-        $sales_representative = User::forDropdown($business_id, false, false, true);
-
-        $is_cmsn_agent_enabled = request()->session()->get('business.sales_cmsn_agnt');
-        $commission_agents = [];
-        if (!empty($is_cmsn_agent_enabled)) {
-            $commission_agents = User::forDropdown($business_id, false, true, true);
-        }
-
-        $is_tables_enabled = $this->transactionUtil->isModuleEnabled('tables');
-        $is_service_staff_enabled = $this->transactionUtil->isModuleEnabled('service_staff');
-
-        //Service staff filter
-        $service_staffs = null;
-        if ($is_service_staff_enabled) {
-            $service_staffs = $this->productUtil->serviceStaffDropdown($business_id);
-        }
-
-        $is_types_service_enabled = $this->moduleUtil->isModuleEnabled('types_of_service');
-
-        $shipping_statuses = $this->transactionUtil->shipping_statuses();
-
-        return view('sale_pos.index')->with(compact('business_locations', 'customers', 'sales_representative', 'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 'is_service_staff_enabled', 'is_types_service_enabled', 'shipping_statuses'));
+{
+    if (!auth()->user()->can('sell.view') && !auth()->user()->can('sell.create')) {
+        abort(403, 'Unauthorized action.');
     }
+
+    $business_id = request()->session()->get('user.business_id');
+
+    $business_locations = BusinessLocation::forDropdown($business_id, false);
+    $customers = Contact::customersDropdown($business_id, false);
+
+    $sales_representative = User::forDropdown($business_id, false, false, true);
+
+    $is_cmsn_agent_enabled = request()->session()->get('business.sales_cmsn_agnt');
+    $commission_agents = [];
+    if (!empty($is_cmsn_agent_enabled)) {
+        $commission_agents = User::forDropdown($business_id, false, true, true);
+    }
+
+    $is_tables_enabled = $this->transactionUtil->isModuleEnabled('tables');
+    $is_service_staff_enabled = $this->transactionUtil->isModuleEnabled('service_staff');
+
+    //Service staff filter
+    $service_staffs = null;
+    if ($is_service_staff_enabled) {
+        $service_staffs = $this->productUtil->serviceStaffDropdown($business_id);
+    }
+
+    $is_types_service_enabled = $this->moduleUtil->isModuleEnabled('types_of_service');
+
+    $shipping_statuses = $this->transactionUtil->shipping_statuses();
+
+    // Replace the empty array with an object containing necessary properties
+    $receipt_details = (object)[
+        // Existing properties
+        'invoice_no' => '',
+        'invoice_no_prefix' => '',
+        'invoice_date' => '',
+        'business_name' => $business_details->name ?? '',
+        'location_name' => $default_location->name ?? '',
+        'tax_info1' => '',
+        'tax_info2' => '',
+        'location_address' => $default_location->location_address ?? '',
+        'location_email' => $default_location->email ?? '',
+        'location_phone' => $default_location->mobile ?? '',
+        'customer_name' => '',
+        'customer_info' => '',
+        'customer_tax_number' => '',
+        'customer_tax_label' => '',
+        'customer_address' => '',
+        'table_label' => '',
+        'table' => '',
+        'waiter' => '',
+        'waiter_label' => '',
+        'service_staff_label' => '',
+        'service_staff' => '',
+        'shipping_details' => '',
+        'shipping_address' => '',
+        'shipping_charges' => '',
+        'packing_charge' => '',
+        'packing_charge_label' => '',
+        'sub_total_label' => '',
+        'tax_label' => '',
+        'discount_label' => '',
+        'total_label' => '',
+        'round_off_label' => '',
+        'total_due_label' => '',
+        'paid_label' => '',
+        'footer_text' => '',
+        'additional_notes' => '',
+        
+        // Add these new properties
+        'date_label' => '',
+        'time_label' => '',
+        'customer_label' => '',
+        'serial_number_label' => '',
+        'product_label' => '',
+        'qty_label' => '',
+        'unit_price_label' => '',
+        'subtotal_label' => '',
+        'total_items_label' => '',
+        'total_qty_label' => '',
+        'total_price_label' => '',
+        'currency_symbol' => '',
+        'currency_thousand_separator' => '',
+        'currency_decimal_separator' => '',
+        'currency_symbol_placement' => '',
+        'show_barcode' => false,
+        'barcode_type' => '',
+        'show_payments' => false,
+        'show_customer' => false,
+        'customer_info_address' => '',
+        'contact_number' => '',
+        'item_addition_method' => 0,
+        'change_return_label' => '',
+        'change_return' => 0,
+        'show_logo' => false
+    ];
+    
+
+    return view('sale_pos.index')->with(compact('business_locations', 'customers', 'sales_representative', 
+    'is_cmsn_agent_enabled', 'commission_agents', 'service_staffs', 'is_tables_enabled', 
+    'is_service_staff_enabled', 'is_types_service_enabled', 'shipping_statuses', 'receipt_details'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -261,6 +331,73 @@ class SellPosController extends Controller
         //Added check because $users is of no use if enable_contact_assign if false
         $users = config('constants.enable_contact_assign') ? User::forDropdown($business_id, false, false, false, true) : [];
 
+        $receipt_details = (object)[
+            // Existing properties
+            'invoice_no' => '',
+            'invoice_no_prefix' => '',
+            'invoice_date' => '',
+            'business_name' => $business_details->name ?? '',
+            'location_name' => $default_location->name ?? '',
+            'tax_info1' => '',
+            'tax_info2' => '',
+            'location_address' => $default_location->location_address ?? '',
+            'location_email' => $default_location->email ?? '',
+            'location_phone' => $default_location->mobile ?? '',
+            'customer_name' => '',
+            'customer_info' => '',
+            'customer_tax_number' => '',
+            'customer_tax_label' => '',
+            'customer_address' => '',
+            'table_label' => '',
+            'table' => '',
+            'waiter' => '',
+            'waiter_label' => '',
+            'service_staff_label' => '',
+            'service_staff' => '',
+            'shipping_details' => '',
+            'shipping_address' => '',
+            'shipping_charges' => '',
+            'packing_charge' => '',
+            'packing_charge_label' => '',
+            'sub_total_label' => '',
+            'tax_label' => '',
+            'discount_label' => '',
+            'total_label' => '',
+            'round_off_label' => '',
+            'total_due_label' => '',
+            'paid_label' => '',
+            'footer_text' => '',
+            'additional_notes' => '',
+            
+            // Add these new properties
+            'date_label' => '',
+            'time_label' => '',
+            'customer_label' => '',
+            'serial_number_label' => '',
+            'product_label' => '',
+            'qty_label' => '',
+            'unit_price_label' => '',
+            'subtotal_label' => '',
+            'total_items_label' => '',
+            'total_qty_label' => '',
+            'total_price_label' => '',
+            'currency_symbol' => '',
+            'currency_thousand_separator' => '',
+            'currency_decimal_separator' => '',
+            'currency_symbol_placement' => '',
+            'show_barcode' => false,
+            'barcode_type' => '',
+            'show_payments' => false,
+            'show_customer' => false,
+            'customer_info_address' => '',
+            'contact_number' => '',
+            'item_addition_method' => 0,
+            'change_return_label' => '',
+            'change_return' => 0,
+            'show_logo' => false
+        ];
+        
+
         return view('sale_pos.create')
             ->with(compact(
                 'edit_discount',
@@ -294,6 +431,7 @@ class SellPosController extends Controller
                 'default_invoice_schemes',
                 'invoice_layouts',
                 'users',
+                'receipt_details'
             ));
     }
 

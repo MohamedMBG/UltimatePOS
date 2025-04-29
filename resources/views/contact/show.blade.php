@@ -5,6 +5,18 @@
 
 <!-- Main content -->
 <section class="content no-print">
+    <style>
+        .contact-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    display: block;
+    margin: 10px auto;
+}
+
+    </style>
     <div class="row no-print">
         <div class="col-md-4">
             <h3>@lang('contact.view_contact')</h3>

@@ -57,6 +57,11 @@
                             class="fas fa-edit tw-text-[#E7A500]"></i> @lang('lang_v1.quotation')</button>
                 @endif
 
+                <a href="{{ route('sells.manual') }}"
+                    class="tw-font-bold tw-text-gray-700 tw-cursor-pointer tw-text-xs md:tw-text-sm tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-1">
+                    <i class="fas fa-pencil-alt tw-text-[#28B77B]" aria-hidden="true"></i> Manual Sell
+                </a>
+
                 @if (!Gate::check('disable_suspend_sale') || auth()->user()->can('superadmin') || auth()->user()->can('admin'))
                     @if (empty($pos_settings['disable_suspend']))
                         <button type="button"

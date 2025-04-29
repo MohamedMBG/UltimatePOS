@@ -18,6 +18,23 @@ class Contact extends Authenticatable
      * @var array
      */
     protected $guarded = ['id'];
+    protected $fillable = [
+        'business_id', 'type', 'contact_type', 'supplier_business_name',
+        'name', 'prefix', 'first_name', 'middle_name', 'last_name',
+        'email', 'image', 'contact_id', 'contact_status', 'tax_number',
+        'city', 'state', 'country', 'address_line_1', 'address_line_2',
+        'zip_code', 'dob', 'mobile', 'landline', 'alternate_number',
+        'pay_term_number', 'pay_term_type', 'credit_limit', 'created_by',
+        'balance', 'total_rp', 'total_rp_used', 'total_rp_expired',
+        'is_default', 'shipping_address', 'shipping_custom_field_details',
+        'is_export', 'export_custom_field_1', 'export_custom_field_2',
+        'export_custom_field_3', 'export_custom_field_4', 'export_custom_field_5',
+        'export_custom_field_6', 'position', 'customer_group_id',
+        'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4',
+        'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8',
+        'custom_field9', 'custom_field10'
+    ];
+    
 
     /**
      * The attributes that should be cast to native types.

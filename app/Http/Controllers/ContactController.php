@@ -575,83 +575,110 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        if (! auth()->user()->can('supplier.create') && ! auth()->user()->can('customer.create') && ! auth()->user()->can('customer.view_own') && ! auth()->user()->can('supplier.view_own')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        try {
-            $business_id = $request->session()->get('user.business_id');
-
-            if (! $this->moduleUtil->isSubscribed($business_id)) {
-                return $this->moduleUtil->expiredResponse();
-            }
-
-            $input = $request->only(['type', 'supplier_business_name',
-                'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'landline', 'alternate_number', 'city', 'state', 'country', 'address_line_1', 'address_line_2', 'customer_group_id', 'zip_code', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position', 'dob', 'shipping_custom_field_details', 'assigned_to_users', ]);
-
-            $name_array = [];
-
-            if (! empty($input['prefix'])) {
-                $name_array[] = $input['prefix'];
-            }
-            if (! empty($input['first_name'])) {
-                $name_array[] = $input['first_name'];
-            }
-            if (! empty($input['middle_name'])) {
-                $name_array[] = $input['middle_name'];
-            }
-            if (! empty($input['last_name'])) {
-                $name_array[] = $input['last_name'];
-            }
-
-            $input['contact_type'] = $request->input('contact_type_radio');
-
-            $input['name'] = trim(implode(' ', $name_array));
-
-            if (! empty($request->input('is_export'))) {
-                $input['is_export'] = true;
-                $input['export_custom_field_1'] = $request->input('export_custom_field_1');
-                $input['export_custom_field_2'] = $request->input('export_custom_field_2');
-                $input['export_custom_field_3'] = $request->input('export_custom_field_3');
-                $input['export_custom_field_4'] = $request->input('export_custom_field_4');
-                $input['export_custom_field_5'] = $request->input('export_custom_field_5');
-                $input['export_custom_field_6'] = $request->input('export_custom_field_6');
-                $input['export_custom_field_7'] = $request->input('export_custom_field_7');
-            }
-
-            if (! empty($input['dob'])) {
-                $input['dob'] = $this->commonUtil->uf_date($input['dob']);
-            }
-
-            $input['business_id'] = $business_id;
-            $input['created_by'] = $request->session()->get('user.id');
-
-            $input['credit_limit'] = $request->input('credit_limit') != '' ? $this->commonUtil->num_uf($request->input('credit_limit')) : null;
-            $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
-
-            DB::beginTransaction();
-            $output = $this->contactUtil->createNewContact($input);
-
-            event(new ContactCreatedOrModified($input, 'added'));
-
-            $this->moduleUtil->getModuleData('after_contact_saved', ['contact' => $output['data'], 'input' => $request->input()]);
-
-            $this->contactUtil->activityLog($output['data'], 'added');
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
-
-            $output = ['success' => false,
-                'msg' => __('messages.something_went_wrong'),
-            ];
-        }
-
-        return $output;
+    
+     public function store(Request $request)
+{
+    // Check if the user has permission to create or view contacts
+    if (!auth()->user()->can('supplier.create') && 
+        !auth()->user()->can('customer.create') && 
+        !auth()->user()->can('customer.view_own') && 
+        !auth()->user()->can('supplier.view_own')) {
+        abort(403, 'Unauthorized action.');
     }
+
+    try {
+        $business_id = $request->session()->get('user.business_id');
+
+        // Check if the business subscription is active
+        if (!$this->moduleUtil->isSubscribed($business_id)) {
+            return $this->moduleUtil->expiredResponse();
+        }
+
+        // Retrieve only necessary fields from request
+        $input = $request->only([
+            'type', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 'last_name',
+            'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'landline', 'alternate_number',
+            'city', 'state', 'country', 'address_line_1', 'address_line_2', 'customer_group_id', 
+            'zip_code', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 
+            'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 
+            'custom_field10', 'email', 'shipping_address', 'position', 'dob', 'shipping_custom_field_details', 
+            'assigned_to_users'
+        ]);
+
+        // Handle Image Upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('contacts', 'public'); // Store in 'storage/app/public/contacts'
+            $input['image'] = $imagePath; // Save path to the database
+        }
+
+        // Generate the full name from prefix, first, middle, and last names
+        $input['name'] = trim(implode(' ', array_filter([
+            $input['prefix'] ?? '', 
+            $input['first_name'] ?? '', 
+            $input['middle_name'] ?? '', 
+            $input['last_name'] ?? ''
+        ])));
+
+        // Assign contact type
+        $input['contact_type'] = $request->input('contact_type_radio');
+
+        // Handle export fields if applicable
+        if ($request->filled('is_export')) {
+            $input['is_export'] = true;
+            for ($i = 1; $i <= 7; $i++) {
+                $input["export_custom_field_$i"] = $request->input("export_custom_field_$i");
+            }
+        }
+
+        // Convert date format if DOB is present
+        if (!empty($input['dob'])) {
+            $input['dob'] = $this->commonUtil->uf_date($input['dob']);
+        }
+
+        // Assign business and creator info
+        $input['business_id'] = $business_id;
+        $input['created_by'] = $request->session()->get('user.id');
+
+        // Convert numerical fields
+        $input['credit_limit'] = $request->filled('credit_limit') 
+            ? $this->commonUtil->num_uf($request->input('credit_limit')) 
+            : null;
+
+        $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
+
+        // Start database transaction
+        DB::beginTransaction();
+
+        // Create the new contact
+        $output = $this->contactUtil->createNewContact($input);
+
+        // Fire contact creation event
+        event(new ContactCreatedOrModified($input, 'added'));
+
+        // Execute additional module actions after contact creation
+        $this->moduleUtil->getModuleData('after_contact_saved', [
+            'contact' => $output['data'], 
+            'input' => $request->input()
+        ]);
+
+        // Log contact creation activity
+        $this->contactUtil->activityLog($output['data'], 'added');
+
+        DB::commit();
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::emergency('Error in ' . $e->getFile() . ' Line ' . $e->getLine() . ' Message: ' . $e->getMessage());
+
+        $output = [
+            'success' => false,
+            'msg' => __('messages.something_went_wrong'),
+        ];
+    }
+
+    return $output;
+}
+
 
     /**
      * Display the specified resource.
