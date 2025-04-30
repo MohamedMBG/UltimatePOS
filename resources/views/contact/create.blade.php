@@ -1,336 +1,579 @@
-<!-- business information here -->
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+  @php
+    $form_id = 'contact_add_form';
+    if(isset($quick_add)){
+      $form_id = 'quick_add_contact';
+    }
 
-<div class="row" style="color: #000000 !important;">
-	<!-- Logo -->
-	@if(empty($receipt_details->letter_head))
-	@if(!empty($receipt_details->logo))
-	<img style="max-height: 120px; width: auto;" src="{{$receipt_details->logo}}" class="img img-responsive center-block">
-	@endif
+    if(isset($store_action)) {
+      $url = $store_action;
+      $type = 'lead';
+      $customer_groups = [];
+    } else {
+      $url = action([\App\Http\Controllers\ContactController::class, 'store']);
+      $type = isset($selected_type) ? $selected_type : '';
+      $sources = [];
+      $life_stages = [];
+    }
+  @endphp
+    {!! Form::open(['url' => $url, 'method' => 'post', 'id' => $form_id ]) !!}
 
-	<!-- Header text -->
-	@if(!empty($receipt_details->header_text))
-	<div class="col-xs-12">
-		{!! $receipt_details->header_text !!}
-	</div>
-	@endif
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">@lang('contact.add_contact')</h4>
+    </div>
 
-	<!-- business information here -->
-	<div class="col-xs-12 text-center">
-		<h2 class="text-center">
-			<!-- Shop & Location Name  -->
-			@if(!empty($receipt_details->display_name))
-			{{$receipt_details->display_name}}
-			@endif
-		</h2>
-
-		<!-- Address -->
-		<p>
-			@if(!empty($receipt_details->address))
-			<small class="text-center">
-				{!! $receipt_details->address !!}
-			</small>
-			@endif
-			@if(!empty($receipt_details->contact))
-			<br />{!! $receipt_details->contact !!}
-			@endif
-			@if(!empty($receipt_details->contact) && !empty($receipt_details->website))
-			,
-			@endif
-			@if(!empty($receipt_details->website))
-			{{ $receipt_details->website }}
-			@endif
-			@if(!empty($receipt_details->location_custom_fields))
-			<br>{{ $receipt_details->location_custom_fields }}
-			@endif
-		</p>
-		<p>
-			@if(!empty($receipt_details->sub_heading_line1))
-			{{ $receipt_details->sub_heading_line1 }}
-			@endif
-			@if(!empty($receipt_details->sub_heading_line2))
-			<br>{{ $receipt_details->sub_heading_line2 }}
-			@endif
-			@if(!empty($receipt_details->sub_heading_line3))
-			<br>{{ $receipt_details->sub_heading_line3 }}
-			@endif
-			@if(!empty($receipt_details->sub_heading_line4))
-			<br>{{ $receipt_details->sub_heading_line4 }}
-			@endif
-			@if(!empty($receipt_details->sub_heading_line5))
-			<br>{{ $receipt_details->sub_heading_line5 }}
-			@endif
-		</p>
-		<p>
-			@if(!empty($receipt_details->tax_info1))
-			<b>{{ $receipt_details->tax_label1 }}</b> {{ $receipt_details->tax_info1 }}
-			@endif
-
-			@if(!empty($receipt_details->tax_info2))
-			<b>{{ $receipt_details->tax_label2 }}</b> {{ $receipt_details->tax_info2 }}
-			@endif
-		</p>
-		@endif
-
-
-		<!-- Title of receipt -->
-		@if(!empty($receipt_details->invoice_heading))
-		<h3 class="text-center">
-			{!! $receipt_details->invoice_heading !!}
-		</h3>
-		@endif
-	</div>
-	@if(!empty($receipt_details->letter_head))
-	<div class="col-xs-12 text-center">
-		<img style="width: 100%;margin-bottom: 10px;" src="{{$receipt_details->letter_head}}">
-	</div>
-	@endif
-	<div class="col-xs-12 text-center">
-		<!-- Invoice  number, Date  -->
-		<p style="width: 100% !important" class="word-wrap">
-			<span class="pull-left text-left word-wrap">
-				@if(!empty($receipt_details->invoice_no_prefix))
-				<b>{!! $receipt_details->invoice_no_prefix !!}</b>
-				@endif
-				{{$receipt_details->invoice_no}}
-
-				@if(!empty($receipt_details->types_of_service))
-				<br />
-				<span class="pull-left text-left">
-					<strong>{!! $receipt_details->types_of_service_label !!}:</strong>
-					{{$receipt_details->types_of_service}}
-					<!-- Waiter info -->
-					@if(!empty($receipt_details->types_of_service_custom_fields))
-					@foreach($receipt_details->types_of_service_custom_fields as $key => $value)
-					<br><strong>{{$key}}: </strong> {{$value}}
-					@endforeach
-					@endif
-				</span>
-				@endif
-
-				<!-- Table information-->
-				@if(!empty($receipt_details->table_label) || !empty($receipt_details->table))
-				<br />
-				<span class="pull-left text-left">
-					@if(!empty($receipt_details->table_label))
-					<b>{!! $receipt_details->table_label !!}</b>
-					@endif
-					{{$receipt_details->table}}
-
-					<!-- Waiter info -->
-				</span>
-				@endif
-
-				<!-- customer info -->
-				@if(!empty($receipt_details->customer_info))
-				<br />
-				<b>{{ $receipt_details->customer_label }}</b> <br> {!! $receipt_details->customer_info !!} <br>
-				@endif
-				@if(!empty($receipt_details->client_id_label))
-				<br />
-				<b>{{ $receipt_details->client_id_label }}</b> {{ $receipt_details->client_id }}
-				@endif
-				@if(!empty($receipt_details->customer_tax_label))
-				<br />
-				<b>{{ $receipt_details->customer_tax_label }}</b> {{ $receipt_details->customer_tax_number }}
-				@endif
-				<!--
-				@if(!empty($receipt_details->customer_custom_fields))
-					<br/>{!! $receipt_details->customer_custom_fields !!}
-				@endif
-				-->
-				@if(!empty($receipt_details->custom_field1) || !empty($receipt_details->custom_field2) || !empty($receipt_details->custom_field3) || !empty($receipt_details->custom_field4) || !empty($receipt_details->custom_field5) || !empty($receipt_details->custom_field6) || !empty($receipt_details->custom_field7))
-                <br/>
-                <br/><br/>
-                <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Mesures</h3>
-
-                <div style="margin-top: 20px; margin-bottom: 20px;">
-                    <!-- V.P and E.P Row -->
-                    <div style="display: flex; width: 100%; margin-bottom: 10px;">
-                        <!-- V.P Table -->
-                        <div style="width: 50%; padding-right: 10px;">
-                            @if(!empty($receipt_details->custom_field1) || !empty($receipt_details->custom_field2))
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-                                <tr>
-                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; width: 30%;">V.P</td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;">
-                                        <div><strong>OD:</strong> {{ $receipt_details->custom_field1 ?? '' }}</div>
-                                        <div style="margin-top: 8px;"><strong>OG:</strong> {{ $receipt_details->custom_field2 ?? '' }}</div>
-                                    </td>
-                                </tr>
-                            </table>
-                            @endif
-                        </div>
-                        
-                        <!-- E.P Table -->
-                        <div style="width: 50%; padding-left: 10px;">
-                            @if(!empty($receipt_details->custom_field6) || !empty($receipt_details->custom_field7))
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-                                <tr>
-                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; width: 25%;">E.Pd</td>
-                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; width: 25%;">{{ $receipt_details->custom_field6 ?? '' }}</td>
-                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; width: 25%;">E.Pg</td>
-                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: center; width: 25%;">{{ $receipt_details->custom_field7 ?? '' }}</td>
-                                </tr>
-                            </table>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <!-- ADD Row -->
-                    <div style="width: 50%; margin-bottom: 10px;">
-                        @if(!empty($receipt_details->custom_field3))
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-                            <tr>
-                                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; width: 30%;">ADD</td>
-                                <td style="border: 1px solid #ddd; padding: 8px;">{{ $receipt_details->custom_field3 ?? '' }}</td>
-                            </tr>
-                        </table>
-                        @endif
-                    </div>
-                    
-                    <!-- V.L Row -->
-                    <div style="width: 50%; margin-bottom: 10px;">
-                        @if(!empty($receipt_details->custom_field4) || !empty($receipt_details->custom_field5))
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd;">
-                            <tr>
-                                <td style="border: 1px solid #ddd; padding: 8px; text-align: center; width: 30%;">V.L</td>
-                                <td style="border: 1px solid #ddd; padding: 8px;">
-                                    <div><strong>OD:</strong> {{ $receipt_details->custom_field4 ?? '' }}</div>
-                                    <div style="margin-top: 8px;"><strong>OG:</strong> {{ $receipt_details->custom_field5 ?? '' }}</div>
-                                </td>
-                            </tr>
-                        </table>
-                        @endif
+    <div class="modal-body">
+        <div class="row">            
+            <div class="col-md-4 contact_type_div">
+                <div class="form-group">
+                    {!! Form::label('type', __('contact.contact_type') . ':*' ) !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-user"></i>
+                        </span>
+                        {!! Form::select('type', $types, $type , ['class' => 'form-control', 'id' => 'contact_type','placeholder' => __('messages.please_select'), 'required']); !!}
                     </div>
                 </div>
-                @endif
-				@if(!empty($receipt_details->sales_person_label))
-				<br />
-				<b>{{ $receipt_details->sales_person_label }}</b> {{ $receipt_details->sales_person }}
-				@endif
-				@if(!empty($receipt_details->commission_agent_label))
-				<br />
-				<strong>{{ $receipt_details->commission_agent_label }}</strong> {{ $receipt_details->commission_agent }}
-				@endif
-				@if(!empty($receipt_details->customer_rp_label))
-				<br />
-				<strong>{{ $receipt_details->customer_rp_label }}</strong> {{ $receipt_details->customer_total_rp }}
-				@endif
-			</span>
+            </div>
+            <div class="col-md-4 mt-15">
+                <label class="radio-inline">
+                    <input type="radio" name="contact_type_radio" id="inlineRadio1" value="individual">
+                    @lang('lang_v1.individual')
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="contact_type_radio" id="inlineRadio2" value="business">
+                    @lang('business.business')
+                </label>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('contact_id', __('lang_v1.contact_id') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-id-badge"></i>
+                        </span>
+                        {!! Form::text('contact_id', null, ['class' => 'form-control','placeholder' => __('lang_v1.contact_id')]); !!}
+                    </div>
+                    <p class="help-block">
+                        @lang('lang_v1.leave_empty_to_autogenerate')
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4 customer_fields">
+                <div class="form-group">
+                  {!! Form::label('customer_group_id', __('lang_v1.customer_group') . ':') !!}
+                  <div class="input-group">
+                      <span class="input-group-addon">
+                          <i class="fa fa-users"></i>
+                      </span>
+                      {!! Form::select('customer_group_id', $customer_groups, '', ['class' => 'form-control']); !!}
+                  </div>
+                </div>
+            </div>
+            <div class="clearfix customer_fields"></div>
+            <div class="col-md-4 business" style="display: none;">
+                <div class="form-group">
+                    {!! Form::label('supplier_business_name', __('business.business_name') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-briefcase"></i>
+                        </span>
+                        {!! Form::text('supplier_business_name', null, ['class' => 'form-control', 'placeholder' => __('business.business_name')]); !!}
+                    </div>
+                </div>
+            </div>
 
-			<span class="pull-right text-left">
-				<b>{{$receipt_details->date_label}}</b> {{$receipt_details->invoice_date}}
+            <div class="clearfix"></div>
 
-				@if(!empty($receipt_details->due_date_label))
-				<br><b>{{$receipt_details->due_date_label}}</b> {{$receipt_details->due_date ?? ''}}
-				@endif
+            <div class="col-md-3 individual" style="display: none;">
+                <div class="form-group">
+                    {!! Form::label('prefix', __( 'business.prefix' ) . ':') !!}
+                    {!! Form::text('prefix', null, ['class' => 'form-control', 'placeholder' => __( 'business.prefix_placeholder' ) ]); !!}
+                </div>
+            </div>
+            <div class="col-md-3 individual" style="display: none;">
+                <div class="form-group">
+                    {!! Form::label('first_name', __( 'business.first_name' ) . ':*') !!}
+                    {!! Form::text('first_name', null, ['class' => 'form-control', 'required', 'placeholder' => __( 'business.first_name' ) ]); !!}
+                </div>
+            </div>
+            <div class="col-md-3 individual" style="display: none;">
+                <div class="form-group">
+                    {!! Form::label('middle_name', __( 'lang_v1.middle_name' ) . ':') !!}
+                    {!! Form::text('middle_name', null, ['class' => 'form-control', 'placeholder' => __( 'lang_v1.middle_name' ) ]); !!}
+                </div>
+            </div>
+            <div class="col-md-3 individual" style="display: none;">
+                <div class="form-group">
+                    {!! Form::label('last_name', __( 'business.last_name' ) . ':') !!}
+                    {!! Form::text('last_name', null, ['class' => 'form-control', 'placeholder' => __( 'business.last_name' ) ]); !!}
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('mobile', __('contact.mobile') . ':*') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-mobile"></i>
+                        </span>
+                        {!! Form::text('mobile', null, ['class' => 'form-control', 'required', 'placeholder' => __('contact.mobile')]); !!}
+                    </div>
+                </div>
+            </div>
 
-				@if(!empty($receipt_details->brand_label) || !empty($receipt_details->repair_brand))
-				<br>
-				@if(!empty($receipt_details->brand_label))
-				<b>{!! $receipt_details->brand_label !!}</b>
-				@endif
-				{{$receipt_details->repair_brand}}
-				@endif
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('alternate_number', __('contact.alternate_contact_number') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-phone"></i>
+                        </span>
+                        {!! Form::text('alternate_number', null, ['class' => 'form-control', 'placeholder' => __('contact.alternate_contact_number')]); !!}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('landline', __('contact.landline') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-phone"></i>
+                        </span>
+                        {!! Form::text('landline', null, ['class' => 'form-control', 'placeholder' => __('contact.landline')]); !!}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('email', __('business.email') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-envelope"></i>
+                        </span>
+                        {!! Form::email('email', null, ['class' => 'form-control','placeholder' => __('business.email')]); !!}
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-4 individual" style="display: none;">
+                <div class="form-group">
+                    {!! Form::label('dob', __('lang_v1.dob') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        
+                        {!! Form::text('dob', null, ['class' => 'form-control dob-date-picker','placeholder' => __('lang_v1.dob'), 'readonly']); !!}
+                    </div>
+                </div>
+            </div>
 
+            <!-- lead additional field -->
+            <div class="col-md-4 lead_additional_div">
+              <div class="form-group">
+                  {!! Form::label('crm_source', __('lang_v1.source') . ':' ) !!}
+                  <div class="input-group">
+                      <span class="input-group-addon">
+                          <i class="fas fa fa-search"></i>
+                      </span>
+                      {!! Form::select('crm_source', $sources, null , ['class' => 'form-control', 'id' => 'crm_source','placeholder' => __('messages.please_select')]); !!}
+                  </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4 lead_additional_div">
+              <div class="form-group">
+                  {!! Form::label('crm_life_stage', __('lang_v1.life_stage') . ':' ) !!}
+                  <div class="input-group">
+                      <span class="input-group-addon">
+                          <i class="fas fa fa-life-ring"></i>
+                      </span>
+                      {!! Form::select('crm_life_stage', $life_stages, null , ['class' => 'form-control', 'id' => 'crm_life_stage','placeholder' => __('messages.please_select')]); !!}
+                  </div>
+              </div>
+            </div>
 
-				@if(!empty($receipt_details->device_label) || !empty($receipt_details->repair_device))
-				<br>
-				@if(!empty($receipt_details->device_label))
-				<b>{!! $receipt_details->device_label !!}</b>
-				@endif
-				{{$receipt_details->repair_device}}
-				@endif
+            <!-- User in create leads -->
+            <div class="col-md-6 lead_additional_div">
+                  <div class="form-group">
+                      {!! Form::label('user_id', __('lang_v1.assigned_to') . ':*' ) !!}
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                              <i class="fa fa-user"></i>
+                          </span>
+                          {!! Form::select('user_id[]', $users ?? [], null , ['class' => 'form-control select2', 'id' => 'user_id', 'multiple', 'required', 'style' => 'width: 100%;']); !!}
+                      </div>
+                  </div>
+            </div>
 
-				@if(!empty($receipt_details->model_no_label) || !empty($receipt_details->repair_model_no))
-				<br>
-				@if(!empty($receipt_details->model_no_label))
-				<b>{!! $receipt_details->model_no_label !!}</b>
-				@endif
-				{{$receipt_details->repair_model_no}}
-				@endif
+            <!-- User in create customer & supplier -->
+            @if(config('constants.enable_contact_assign') && $type !== 'lead')
+                <div class="col-md-6">
+                      <div class="form-group">
+                          {!! Form::label('assigned_to_users', __('lang_v1.assigned_to') . ':' ) !!}
+                          <div class="input-group">
+                              <span class="input-group-addon">
+                                  <i class="fa fa-user"></i>
+                              </span>
+                              {!! Form::select('assigned_to_users[]', $users ?? [], null , ['class' => 'form-control select2', 'id' => 'assigned_to_users', 'multiple', 'style' => 'width: 100%;']); !!}
+                          </div>
+                      </div>
+                </div>
+            @endif
 
-				@if(!empty($receipt_details->serial_no_label) || !empty($receipt_details->repair_serial_no))
-				<br>
-				@if(!empty($receipt_details->serial_no_label))
-				<b>{!! $receipt_details->serial_no_label !!}</b>
-				@endif
-				{{$receipt_details->repair_serial_no}}<br>
-				@endif
-				@if(!empty($receipt_details->repair_status_label) || !empty($receipt_details->repair_status))
-				@if(!empty($receipt_details->repair_status_label))
-				<b>{!! $receipt_details->repair_status_label !!}</b>
-				@endif
-				{{$receipt_details->repair_status}}<br>
-				@endif
+            <div class="clearfix"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="tw-dw-btn tw-dw-btn-primary tw-text-white tw-dw-btn-sm center-block more_btn" data-target="#more_div">@lang('lang_v1.more_info') <i class="fa fa-chevron-down"></i></button>
+            </div>
 
-				@if(!empty($receipt_details->repair_warranty_label) || !empty($receipt_details->repair_warranty))
-				@if(!empty($receipt_details->repair_warranty_label))
-				<b>{!! $receipt_details->repair_warranty_label !!}</b>
-				@endif
-				{{$receipt_details->repair_warranty}}
-				<br>
-				@endif
+            <div id="more_div" class="hide">
+                {!! Form::hidden('position', null, ['id' => 'position']); !!}
+                <div class="col-md-12"><hr/></div>
 
-				<!-- Waiter info -->
-				@if(!empty($receipt_details->service_staff_label) || !empty($receipt_details->service_staff))
-				<br />
-				@if(!empty($receipt_details->service_staff_label))
-				<b>{!! $receipt_details->service_staff_label !!}</b>
-				@endif
-				{{$receipt_details->service_staff}}
-				@endif
-				@if(!empty($receipt_details->shipping_custom_field_1_label))
-				<br><strong>{!!$receipt_details->shipping_custom_field_1_label!!} :</strong> {!!$receipt_details->shipping_custom_field_1_value ?? ''!!}
-				@endif
+                <div class="col-md-4">
+                    <div class="form-group">
+                      {!! Form::label('tax_number', __('contact.tax_no') . ':') !!}
+                        <div class="input-group">
+                          <span class="input-group-addon">
+                              <i class="fa fa-info"></i>
+                          </span>
+                          {!! Form::text('tax_number', null, ['class' => 'form-control', 'placeholder' => __('contact.tax_no')]); !!}
+                        </div>
+                    </div>
+                </div>
 
-				@if(!empty($receipt_details->shipping_custom_field_2_label))
-				<br><strong>{!!$receipt_details->shipping_custom_field_2_label!!}:</strong> {!!$receipt_details->shipping_custom_field_2_value ?? ''!!}
-				@endif
+                <div class="col-md-4 opening_balance">
+                  <div class="form-group">
+                      {!! Form::label('opening_balance', __('lang_v1.opening_balance') . ':') !!}
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                              <i class="fas fa-money-bill-alt"></i>
+                          </span>
+                          {!! Form::text('opening_balance', 0, ['class' => 'form-control input_number']); !!}
+                      </div>
+                  </div>
+                </div>
 
-				@if(!empty($receipt_details->shipping_custom_field_3_label))
-				<br><strong>{!!$receipt_details->shipping_custom_field_3_label!!}:</strong> {!!$receipt_details->shipping_custom_field_3_value ?? ''!!}
-				@endif
+                <div class="col-md-4 pay_term">
+                  <div class="form-group">
+                    <div class="multi-input">
+                      {!! Form::label('pay_term_number', __('contact.pay_term') . ':') !!} @show_tooltip(__('tooltip.pay_term'))
+                      <br/>
+                      {!! Form::number('pay_term_number', null, ['class' => 'form-control width-40 pull-left', 'placeholder' => __('contact.pay_term')]); !!}
 
-				@if(!empty($receipt_details->shipping_custom_field_4_label))
-				<br><strong>{!!$receipt_details->shipping_custom_field_4_label!!}:</strong> {!!$receipt_details->shipping_custom_field_4_value ?? ''!!}
-				@endif
+                      {!! Form::select('pay_term_type', ['months' => __('lang_v1.months'), 'days' => __('lang_v1.days')], '', ['class' => 'form-control width-60 pull-left','placeholder' => __('messages.please_select')]); !!}
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+                @php
+                  $common_settings = session()->get('business.common_settings');
+                  $default_credit_limit = !empty($common_settings['default_credit_limit']) ? $common_settings['default_credit_limit'] : null;
+                @endphp
+                <div class="col-md-4 customer_fields">
+                  <div class="form-group">
+                      {!! Form::label('credit_limit', __('lang_v1.credit_limit') . ':') !!}
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                              <i class="fas fa-money-bill-alt"></i>
+                          </span>
+                          {!! Form::text('credit_limit', $default_credit_limit ?? null, ['class' => 'form-control input_number']); !!}
+                      </div>
+                      <p class="help-block">@lang('lang_v1.credit_limit_help')</p>
+                  </div>
+                </div>
+                
 
-				@if(!empty($receipt_details->shipping_custom_field_5_label))
-				<br><strong>{!!$receipt_details->shipping_custom_field_2_label!!}:</strong> {!!$receipt_details->shipping_custom_field_5_value ?? ''!!}
-				@endif
-				{{-- sale order --}}
-				@if(!empty($receipt_details->sale_orders_invoice_no))
-				<br>
-				<strong>@lang('restaurant.order_no'):</strong> {!!$receipt_details->sale_orders_invoice_no ?? ''!!}
-				@endif
+                <div class="col-md-12"><hr/></div>
+                <div class="clearfix"></div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {!! Form::label('address_line_1', __('lang_v1.address_line_1') . ':') !!}
+                        {!! Form::text('address_line_1', null, ['class' => 'form-control', 'placeholder' => __('lang_v1.address_line_1'), 'rows' => 3]); !!}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {!! Form::label('address_line_2', __('lang_v1.address_line_2') . ':') !!}
+                        {!! Form::text('address_line_2', null, ['class' => 'form-control', 'placeholder' => __('lang_v1.address_line_2'), 'rows' => 3]); !!}
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+              <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('city', __('business.city') . ':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-map-marker"></i>
+                        </span>
+                        {!! Form::text('city', null, ['class' => 'form-control', 'placeholder' => __('business.city')]); !!}
+                    </div>
+                </div>
+              </div>
+          <div class="col-md-3">
+            <div class="form-group">
+                {!! Form::label('state', __('business.state') . ':') !!}
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-map-marker"></i>
+                    </span>
+                    {!! Form::text('state', null, ['class' => 'form-control', 'placeholder' => __('business.state')]); !!}
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+                {!! Form::label('country', __('business.country') . ':') !!}
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-globe"></i>
+                    </span>
+                    {!! Form::text('country', null, ['class' => 'form-control', 'placeholder' => __('business.country')]); !!}
+                </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+                {!! Form::label('zip_code', __('business.zip_code') . ':') !!}
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-map-marker"></i>
+                    </span>
+                    {!! Form::text('zip_code', null, ['class' => 'form-control', 
+                    'placeholder' => __('business.zip_code_placeholder')]); !!}
+                </div>
+            </div>
+          </div>
 
-				@if(!empty($receipt_details->sale_orders_invoice_date))
-				<br>
-				<strong>@lang('lang_v1.order_dates'):</strong> {!!$receipt_details->sale_orders_invoice_date ?? ''!!}
-				@endif
+          <div class="clearfix"></div>
+          <div class="col-md-12">
+            <hr/>
+          </div>
+          @php
+    $custom_labels = json_decode(session('business.custom_labels'), true);
+    $contact_custom_field1 = !empty($custom_labels['contact']['custom_field_1']) ? $custom_labels['contact']['custom_field_1'] : __('lang_v1.contact_custom_field1');
+    $contact_custom_field2 = !empty($custom_labels['contact']['custom_field_2']) ? $custom_labels['contact']['custom_field_2'] : __('lang_v1.contact_custom_field2');
+    $contact_custom_field3 = !empty($custom_labels['contact']['custom_field_3']) ? $custom_labels['contact']['custom_field_3'] : __('lang_v1.contact_custom_field3');
+    $contact_custom_field4 = !empty($custom_labels['contact']['custom_field_4']) ? $custom_labels['contact']['custom_field_4'] : __('lang_v1.contact_custom_field4');
+    $contact_custom_field5 = !empty($custom_labels['contact']['custom_field_5']) ? $custom_labels['contact']['custom_field_5'] : __('lang_v1.contact_custom_field5');
+    $contact_custom_field6 = !empty($custom_labels['contact']['custom_field_6']) ? $custom_labels['contact']['custom_field_6'] : __('lang_v1.contact_custom_field6');
+    $contact_custom_field7 = !empty($custom_labels['contact']['custom_field_7']) ? $custom_labels['contact']['custom_field_7'] : __('lang_v1.contact_custom_field7');
+    $contact_custom_field8 = !empty($custom_labels['contact']['custom_field_8']) ? $custom_labels['contact']['custom_field_8'] : __('lang_v1.custom_field', ['number' => 8]);
+    $contact_custom_field9 = !empty($custom_labels['contact']['custom_field_9']) ? $custom_labels['contact']['custom_field_9'] : __('lang_v1.custom_field', ['number' => 9]);
+    $contact_custom_field10 = !empty($custom_labels['contact']['custom_field_10']) ? $custom_labels['contact']['custom_field_10'] : __('lang_v1.custom_field', ['number' => 10]);
+@endphp
 
-				@if(!empty($receipt_details->sell_custom_field_1_value))
-				<br>
-				<strong>{{ $receipt_details->sell_custom_field_1_label }}:</strong> {!!$receipt_details->sell_custom_field_1_value ?? ''!!}
-				@endif
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>V.L</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field1 }}:</td>
+            <td>{!! Form::text('custom_field1', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field1]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field2 }}:</td>
+            <td>{!! Form::text('custom_field2', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field2]) !!}</td>
+        </tr>
+    </tbody>
+</table>
 
-				@if(!empty($receipt_details->sell_custom_field_2_value))
-				<br>
-				<strong>{{ $receipt_details->sell_custom_field_2_label }}:</strong> {!!$receipt_details->sell_custom_field_2_value ?? ''!!}
-				@endif
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>V.P</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field3 }}:</td>
+            <td>{!! Form::text('custom_field3', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field3]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field4 }}:</td>
+            <td>{!! Form::text('custom_field4', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field4]) !!}</td>
+        </tr>
+    </tbody>
+</table>
 
-				@if(!empty($receipt_details->sell_custom_field_3_value))
-				<br>
-				<strong>{{ $receipt_details->sell_custom_field_3_label }}:</strong> {!!$receipt_details->sell_custom_field_3_value ?? ''!!}
-				@endif
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>E.P</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field5 }}:</td>
+            <td>{!! Form::text('custom_field5', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field5]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field6 }}:</td>
+            <td>{!! Form::text('custom_field6', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field6]) !!}</td>
+        </tr>
+    </tbody>
+</table>
 
-				@if(!empty($receipt_details->sell_custom_field_4_value))
-				<br>
-				<strong>{{ $receipt_details->sell_custom_field_4_label }}:</strong> {!!$receipt_details->sell_custom_field_4_value ?? ''!!}
-				@endif
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>H.P</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field7 }}:</td>
+            <td>{!! Form::text('custom_field7', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field7]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field8 }}:</td>
+            <td>{!! Form::text('custom_field8', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field8]) !!}</td>
+        </tr>
+    </tbody>
+</table>
 
-			</span>
-		</p>
-	</div>
-</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>@lang('lang_v1.field_label')</th>
+            <th>@lang('lang_v1.input_field')</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ $contact_custom_field9 }}:</td>
+            <td>{!! Form::text('custom_field9', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field9]) !!}</td>
+        </tr>
+        <tr>
+            <td>{{ $contact_custom_field10 }}:</td>
+            <td>{!! Form::text('custom_field10', null, ['class' => 'form-control', 'placeholder' => $contact_custom_field10]) !!}</td>
+        </tr>
+    </tbody>
+</table>
+
+          <div class="col-md-12 shipping_addr_div"><hr></div>
+          <div class="col-md-8 col-md-offset-2 shipping_addr_div mb-10" >
+              <strong>{{__('lang_v1.shipping_address')}}</strong><br>
+              {!! Form::text('shipping_address', null, ['class' => 'form-control', 
+                    'placeholder' => __('lang_v1.search_address'), 'id' => 'shipping_address']); !!}
+            <div class="mb-10" id="map"></div>
+          </div>
+          @php
+                $shipping_custom_label_1 = !empty($custom_labels['shipping']['custom_field_1']) ? $custom_labels['shipping']['custom_field_1'] : '';
+
+                $shipping_custom_label_2 = !empty($custom_labels['shipping']['custom_field_2']) ? $custom_labels['shipping']['custom_field_2'] : '';
+
+                $shipping_custom_label_3 = !empty($custom_labels['shipping']['custom_field_3']) ? $custom_labels['shipping']['custom_field_3'] : '';
+
+                $shipping_custom_label_4 = !empty($custom_labels['shipping']['custom_field_4']) ? $custom_labels['shipping']['custom_field_4'] : '';
+
+                $shipping_custom_label_5 = !empty($custom_labels['shipping']['custom_field_5']) ? $custom_labels['shipping']['custom_field_5'] : '';
+            @endphp
+
+            @if(!empty($custom_labels['shipping']['is_custom_field_1_contact_default']) && !empty($shipping_custom_label_1))
+                @php
+                    $label_1 = $shipping_custom_label_1 . ':';
+                @endphp
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('shipping_custom_field_1', $label_1 ) !!}
+                        {!! Form::text('shipping_custom_field_details[shipping_custom_field_1]', null, ['class' => 'form-control','placeholder' => $shipping_custom_label_1]); !!}
+                    </div>
+                </div>
+            @endif
+            @if(!empty($custom_labels['shipping']['is_custom_field_2_contact_default']) && !empty($shipping_custom_label_2))
+                @php
+                    $label_2 = $shipping_custom_label_2 . ':';
+                @endphp
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('shipping_custom_field_2', $label_2 ) !!}
+                        {!! Form::text('shipping_custom_field_details[shipping_custom_field_2]', null, ['class' => 'form-control','placeholder' => $shipping_custom_label_2]); !!}
+                    </div>
+                </div>
+            @endif
+            @if(!empty($custom_labels['shipping']['is_custom_field_3_contact_default']) && !empty($shipping_custom_label_3))
+                @php
+                    $label_3 = $shipping_custom_label_3 . ':';
+                @endphp
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('shipping_custom_field_3', $label_3 ) !!}
+                        {!! Form::text('shipping_custom_field_details[shipping_custom_field_3]', null, ['class' => 'form-control','placeholder' => $shipping_custom_label_3]); !!}
+                    </div>
+                </div>
+            @endif
+            @if(!empty($custom_labels['shipping']['is_custom_field_4_contact_default']) && !empty($shipping_custom_label_4))
+                @php
+                    $label_4 = $shipping_custom_label_4 . ':';
+                @endphp
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('shipping_custom_field_4', $label_4 ) !!}
+                        {!! Form::text('shipping_custom_field_details[shipping_custom_field_4]', null, ['class' => 'form-control','placeholder' => $shipping_custom_label_4]); !!}
+                    </div>
+                </div>
+            @endif
+            @if(!empty($custom_labels['shipping']['is_custom_field_5_contact_default']) && !empty($shipping_custom_label_5))
+                @php
+                    $label_5 = $shipping_custom_label_5 . ':';
+                @endphp
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {!! Form::label('shipping_custom_field_5', $label_5 ) !!}
+                        {!! Form::text('shipping_custom_field_details[shipping_custom_field_5]', null, ['class' => 'form-control','placeholder' => $shipping_custom_label_5]); !!}
+                    </div>
+                </div>
+            @endif
+            @if(!empty($common_settings['is_enabled_export']))
+                <div class="col-md-12 mb-12">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_export" class="form-check-input" id="is_customer_export">
+                        <label class="form-check-label" for="is_customer_export">@lang('lang_v1.is_export')</label>
+                    </div>
+                </div>
+                @php
+                    $i = 1;
+                @endphp
+                @for($i; $i <= 6 ; $i++)
+                    <div class="col-md-4 export_div" style="display: none;">
+                        <div class="form-group">
+                            {!! Form::label('export_custom_field_'.$i, __('lang_v1.export_custom_field'.$i).':' ) !!}
+                            {!! Form::text('export_custom_field_'.$i, null, ['class' => 'form-control','placeholder' => __('lang_v1.export_custom_field'.$i)]); !!}
+                        </div>
+                    </div>
+                @endfor
+            @endif
+            </div>
+        </div>
+        @include('layouts.partials.module_form_part')
+    </div>
+    
+    <div class="modal-footer">
+      <button type="submit" class="tw-dw-btn tw-dw-btn-primary tw-text-white">@lang( 'messages.save' )</button>
+      <button type="button" class="tw-dw-btn tw-dw-btn-neutral tw-text-white" data-dismiss="modal">@lang( 'messages.close' )</button>
+    </div>
+
+    {!! Form::close() !!}
+  
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

@@ -3,6 +3,9 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AccountReportsController;
 use App\Http\Controllers\AccountTypeController;
+// added for the manual controller 
+use App\Http\Controllers\ManualSellController;
+
 // use App\Http\Controllers\Auth;
 use App\Http\Controllers\BackUpController;
 use App\Http\Controllers\BarcodeController;
@@ -540,3 +543,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
 // // Add these routes for the manual sell functionality
 // Route::get('/sells/manual', 'App\Http\Controllers\ManualSellController@create')->name('sells.manual');
 // Route::post('/sells/manual', 'App\Http\Controllers\ManualSellController@store')->name('sells.manual.store');
+
+Route::get('/manual-invoice/create', [ManualSellController::class, 'create'])->name('manual.invoice.create');
+Route::post('/manual-invoice', [ManualSellController::class, 'store'])->name('manual.invoice.store');
+Route::get('/manual-invoice/get-number', [ManualSellController::class, 'getInvoiceNumber'])->name('manual.invoice.getNumber');

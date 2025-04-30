@@ -40,7 +40,10 @@
                                     <span class="input-group-addon">
                                         <i class="fa fa-mobile"></i>
                                     </span>
-                                    {!! Form::text('mobile', null, ['class' => 'form-control', 'readonly', 'id' => 'customer_mobile']); !!}
+                                    <!-- Mobile Field -->
+                                    {!! Form::text('mobile', null, ['class' => 'form-control', 'id' => 'customer_mobile']); !!}
+
+                                    <!-- {!! Form::text('mobile', null, ['class' => 'form-control', 'readonly', 'id' => 'customer_mobile']); !!} -->
                                 </div>
                             </div>
                         </div>
@@ -51,20 +54,10 @@
                                     <span class="input-group-addon">
                                         <i class="fa fa-map-marker"></i>
                                     </span>
-                                    {!! Form::text('address', null, ['class' => 'form-control', 'readonly', 'id' => 'customer_address']); !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                {!! Form::label('midar', __('Midar.le:')) !!}
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-id-card"></i>
-                                    </span>
-                                    {!! Form::text('midar', null, ['class' => 'form-control', 'id' => 'midar']); !!}
+                                    
+                                    <!-- Address Field -->
+                                    {!! Form::text('address', null, ['class' => 'form-control', 'id' => 'customer_address']); !!}
+                                    <!-- {!! Form::text('address', null, ['class' => 'form-control', 'readonly', 'id' => 'customer_address']); !!} -->
                                 </div>
                             </div>
                         </div>
@@ -221,6 +214,40 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Discount</h3>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('discount_type', __('Discount Type:')) !!}
+                            {!! Form::select('discount_type', 
+                                ['percentage' => 'Percentage', 'fixed' => 'Fixed Amount'], 
+                                'percentage', 
+                                ['class' => 'form-control', 'id' => 'discount_type']
+                            ) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('discount_amount', __('Discount Amount:')) !!}
+                            {!! Form::text('discount_amount', 0, [
+                                'class' => 'form-control input_number',
+                                'id' => 'discount_amount',
+                                'min' => 0
+                            ]) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="row">
         <div class="col-md-12 text-center">
