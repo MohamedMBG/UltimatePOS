@@ -265,8 +265,9 @@
                 <div style="display: flex; justify-content: space-between;">
                     <div style="text-align: left; width: 40%;">
                         <div style="font-size: 24px; font-weight: bold;">
-                            <img src="" alt="Logo" id="print_logo" style="max-width: 100px; height: auto;">
-                            <div>Abdo Optic</div>
+                        <img src="{{ asset('uploads/business_logos/1736212821_LOGO OPTICS 2.png') }}" 
+                        style="max-height: 80px; width: auto; display: block; margin: 0 auto;">
+                        
                         </div>
                         <div style="font-size: 16px;">Opticien - Optométriste</div>
                         <div style="font-size: 16px;">Contactologue</div>
@@ -282,9 +283,6 @@
                         <div style="font-size: 16px;">Contacologue</div>
                         <div style="font-size: 18px; margin-top: 20px;">
                             <strong>FACTURE N°: <span id="print_invoice_number" style="color: #d9534f;"></span></strong>
-                        </div>
-                        <div style="font-size: 16px; margin-top: 10px;">
-                            Midar.le: <span id="print_midar"></span>
                         </div>
                     </div>
                 </div>
@@ -477,7 +475,6 @@
             // Populate print template with form data
             $('#print_invoice_number').text($('#invoice_number').val());
             $('#print_customer_name').text($('#customer_id option:selected').text());
-            $('#print_midar').text($('#midar').val());
             $('#print_od_measurement').text($('#od_measurement').val());
             $('#print_og_measurement').text($('#og_measurement').val());
             

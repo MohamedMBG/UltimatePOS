@@ -578,7 +578,6 @@ class ContactController extends Controller
     
      public function store(Request $request)
 {
-    // Check if the user has permission to create or view contacts
     if (!auth()->user()->can('supplier.create') && 
         !auth()->user()->can('customer.create') && 
         !auth()->user()->can('customer.view_own') && 
@@ -589,12 +588,20 @@ class ContactController extends Controller
     try {
         $business_id = $request->session()->get('user.business_id');
 
-        // Check if the business subscription is active
+        // Check subscription
         if (!$this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
         }
 
-        // Retrieve only necessary fields from request
+        // Validate the request
+        $request->validate([
+            'first_name' => 'required',
+            'type' => 'required',
+            'mobile' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // Get all input data
         $input = $request->only([
             'type', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 'last_name',
             'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'landline', 'alternate_number',
@@ -605,13 +612,28 @@ class ContactController extends Controller
             'assigned_to_users'
         ]);
 
-        // Handle Image Upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('contacts', 'public'); // Store in 'storage/app/public/contacts'
-            $input['image'] = $imagePath; // Save path to the database
-        }
 
-        // Generate the full name from prefix, first, middle, and last names
+        // Handle Image Upload
+    if ($request->hasFile('image')) {
+        try {
+            $image = $request->file('image');
+            
+            // Sanitize filename
+            $image_name = time() . '_' . preg_replace('/[^a-zA-Z0-9.]/', '_', $image->getClientOriginalName());
+            
+            // Save to public/storage/contacts
+            $path = $image->storeAs('contacts', $image_name, 'public');
+            
+            // Save relative path to database
+            $input['image'] = 'contacts/' . $image_name;
+            
+        } catch (\Exception $e) {
+            \Log::error('Image upload failed: ' . $e->getMessage());
+            // Continue without image if upload fails
+        }
+    }
+
+        // Build full name
         $input['name'] = trim(implode(' ', array_filter([
             $input['prefix'] ?? '', 
             $input['first_name'] ?? '', 
@@ -619,10 +641,9 @@ class ContactController extends Controller
             $input['last_name'] ?? ''
         ])));
 
-        // Assign contact type
         $input['contact_type'] = $request->input('contact_type_radio');
 
-        // Handle export fields if applicable
+        // Handle export fields
         if ($request->filled('is_export')) {
             $input['is_export'] = true;
             for ($i = 1; $i <= 7; $i++) {
@@ -630,53 +651,59 @@ class ContactController extends Controller
             }
         }
 
-        // Convert date format if DOB is present
+        // Format date of birth
         if (!empty($input['dob'])) {
             $input['dob'] = $this->commonUtil->uf_date($input['dob']);
         }
 
-        // Assign business and creator info
+        // Set business and creator info
         $input['business_id'] = $business_id;
         $input['created_by'] = $request->session()->get('user.id');
 
-        // Convert numerical fields
+        // Format financial fields
         $input['credit_limit'] = $request->filled('credit_limit') 
             ? $this->commonUtil->num_uf($request->input('credit_limit')) 
             : null;
 
         $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
 
-        // Start database transaction
         DB::beginTransaction();
 
-        // Create the new contact
+        // Create contact
         $output = $this->contactUtil->createNewContact($input);
 
-        // Fire contact creation event
-        event(new ContactCreatedOrModified($input, 'added'));
+        // Fire event
+        event(new ContactCreatedOrModified($output['data'], 'added'));
 
-        // Execute additional module actions after contact creation
+        // Module hooks
         $this->moduleUtil->getModuleData('after_contact_saved', [
             'contact' => $output['data'], 
             'input' => $request->input()
         ]);
 
-        // Log contact creation activity
+        // Activity log
         $this->contactUtil->activityLog($output['data'], 'added');
 
         DB::commit();
 
+        return $output;
+
     } catch (\Exception $e) {
         DB::rollBack();
-        \Log::emergency('Error in ' . $e->getFile() . ' Line ' . $e->getLine() . ' Message: ' . $e->getMessage());
+        \Log::emergency('Contact Creation Failed: ' . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
 
         $output = [
             'success' => false,
             'msg' => __('messages.something_went_wrong'),
+            'error' => $e->getMessage() // Only for debugging, remove in production
         ];
+        
+        return $output;
     }
-
-    return $output;
 }
 
 
