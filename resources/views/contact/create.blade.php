@@ -27,6 +27,7 @@
             @csrf
 
             <!-- Basic Information Card -->
+            <div class="modal-body">
             <div class="card mb-4 border-0 shadow-sm">
                 <div class="card-header bg-light border-bottom-0">
                     <h4 class="mb-0">Basic Information</h4>
@@ -218,52 +219,136 @@
                 </div>
             </div>
 
+
             <!-- Custom Fields Card -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light border-bottom-0">
-                    <h4 class="mb-0">Custom Fields</h4>
+            <style>
+    .form-control-sm {
+        height: 32px;
+        font-size: 0.8rem;
+        padding: 0.25rem 0.4rem;
+        border-radius: 0.3rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35em 0.65em;
+        font-weight: 600;
+        border-radius: 0.375rem;
+    }
+
+    .small.text-muted {
+        font-size: 0.75rem;
+    }
+
+    label.small {
+        font-size: 0.75rem;
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .custom-section {
+        border: 1px solid #e0e0e0;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        background-color: #ffffff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.2s ease;
+    }
+
+    .custom-section:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .custom-label {
+        margin-bottom: 0.4rem;
+        font-weight: 500;
+    }
+</style>
+
+<div class="card mb-4 border-0 shadow-sm">
+    <div class="card-header bg-light border-bottom-0 py-2">
+        <h5 class="mb-0">Custom Fields</h5>
+    </div>
+    <div class="card-body p-4">
+        <div class="container-fluid px-0">
+
+            <!-- Row 1: V.L + EP -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="custom-section h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-info me-2">V.L</span>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="small text-muted custom-label">OD</label>
+                                {!! Form::text('custom_field1', null, ['class' => 'form-control form-control-sm']) !!}
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted custom-label">OG</label>
+                                {!! Form::text('custom_field2', null, ['class' => 'form-control form-control-sm']) !!}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="container mt-4">
-                        <table class="table table-bordered text-center align-middle table-hover shadow-sm">
-                            <tbody>
-                                <tr class="table-primary">
-                                    <td rowspan="2" class="fw-bold align-middle">E.P</td>
-                                    <td><strong>OD:</strong> {!! Form::text('custom_field1', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                    <td><strong>OG:</strong> {!! Form::text('custom_field2', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                    <td rowspan="2" class="fw-bold align-middle">H.P</td>
-                                    <td><strong>OD:</strong> {!! Form::text('custom_field3', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                    <td><strong>OG:</strong> {!! Form::text('custom_field4', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                        <table class="table table-bordered text-center align-middle table-hover shadow-sm">
-                            <tbody>
-                                <tr class="table-success">
-                                    <td rowspan="2" class="fw-bold align-middle">V.L</td>
-                                    <td><strong>OD:</strong> {!! Form::text('custom_field5', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>OG:</strong> {!! Form::text('custom_field6', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                        <table class="table table-bordered text-center align-middle table-hover shadow-sm">
-                            <tbody>
-                                <tr class="table-warning">
-                                    <td rowspan="2" class="fw-bold align-middle">V.P</td>
-                                    <td><strong>OD:</strong> {!! Form::text('custom_field7', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>OG:</strong> {!! Form::text('custom_field8', null, ['class' => 'form-control form-control-sm w-75 d-inline']) !!}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                <div class="col-md-6">
+                    <div class="custom-section h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-info me-2">EP</span>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="small text-muted custom-label">EPD</label>
+                                {!! Form::text('custom_field6', null, ['class' => 'form-control form-control-sm']) !!}
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted custom-label">EPG</label>
+                                {!! Form::text('custom_field7', null, ['class' => 'form-control form-control-sm']) !!}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Row 2: ADD (centered and small) -->
+            <div class="row g-4 mb-5 justify-content-center">
+                <div class="col-md-6">
+                    <div class="custom-section">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-info me-2">ADD</span>
+                        </div>
+                        {!! Form::text('custom_field3', null, ['class' => 'form-control form-control-sm']) !!}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: V.P (centered and small) -->
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6">
+                    <div class="custom-section">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-info me-2">V.P</span>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="small text-muted custom-label">OD</label>
+                                {!! Form::text('custom_field4', null, ['class' => 'form-control form-control-sm']) !!}
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted custom-label">OG</label>
+                                {!! Form::text('custom_field5', null, ['class' => 'form-control form-control-sm']) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 
             <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4 mb-3">
@@ -275,6 +360,7 @@
                 </button>
             </div>
         {!! Form::close() !!}
+        </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
 
@@ -306,3 +392,47 @@
         });
     });
 </script>
+
+<style>
+    /* Ensure the modal content takes the full height */
+.modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* Make sure modal body takes the remaining space */
+.modal-body {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* Optional: Add padding inside the modal body for spacing */
+.modal-body .card {
+    margin-bottom: 1rem;
+}
+
+.modal-lg {
+  max-width: 70%;
+  width: 100%;
+}
+
+/* Compact form controls */
+.form-control-sm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+.card-header.py-1 {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
+
+.card-body.p-2 {
+    padding: 0.5rem !important;
+}
+</style>

@@ -826,72 +826,145 @@ class ContactController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        if (! auth()->user()->can('supplier.update') && ! auth()->user()->can('customer.update') && ! auth()->user()->can('customer.view_own') && ! auth()->user()->can('supplier.view_own')) {
-            abort(403, 'Unauthorized action.');
-        }
+{
+    if (!auth()->user()->can('supplier.update') && 
+        !auth()->user()->can('customer.update') && 
+        !auth()->user()->can('customer.view_own') && 
+        !auth()->user()->can('supplier.view_own')) {
+        abort(403, 'Unauthorized action.');
+    }
 
-        if (request()->ajax()) {
-            try {
-                $input = $request->only(['type', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile', 'address_line_1', 'address_line_2', 'zip_code', 'dob', 'alternate_number', 'city', 'state', 'country', 'landline', 'customer_group_id', 'contact_id', 'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4', 'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8', 'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position', 'shipping_custom_field_details', 'export_custom_field_1', 'export_custom_field_2', 'export_custom_field_3', 'export_custom_field_4', 'export_custom_field_5',
-                    'export_custom_field_6', 'assigned_to_users', ]);
+    if (request()->ajax()) {
+        try {
+            $business_id = $request->session()->get('user.business_id');
+            $contact = Contact::where('business_id', $business_id)->findOrFail($id);
+            
+            $input = $request->only([
+                'type', 'supplier_business_name', 'prefix', 'first_name', 'middle_name', 
+                'last_name', 'tax_number', 'pay_term_number', 'pay_term_type', 'mobile',
+                'address_line_1', 'address_line_2', 'zip_code', 'dob', 'alternate_number',
+                'city', 'state', 'country', 'landline', 'customer_group_id', 'contact_id',
+                'custom_field1', 'custom_field2', 'custom_field3', 'custom_field4',
+                'custom_field5', 'custom_field6', 'custom_field7', 'custom_field8',
+                'custom_field9', 'custom_field10', 'email', 'shipping_address', 'position',
+                'shipping_custom_field_details', 'export_custom_field_1', 'export_custom_field_2',
+                'export_custom_field_3', 'export_custom_field_4', 'export_custom_field_5',
+                'export_custom_field_6', 'assigned_to_users'
+            ]);
 
-                $name_array = [];
-
-                if (! empty($input['prefix'])) {
-                    $name_array[] = $input['prefix'];
+            // Handle Image Upload
+            if ($request->hasFile('image')) {
+                try {
+                    $image = $request->file('image');
+                    
+                    // Delete old image if exists
+                    if (!empty($contact->image)) {
+                        $old_image_path = public_path('storage/' . $contact->image);
+                        if (file_exists($old_image_path)) {
+                            unlink($old_image_path);
+                        }
+                    }
+                    
+                    // Sanitize filename
+                    $image_name = time() . '_' . preg_replace('/[^a-zA-Z0-9.]/', '_', $image->getClientOriginalName());
+                    
+                    // Save to public/storage/contacts
+                    $path = $image->storeAs('contacts', $image_name, 'public');
+                    
+                    // Save relative path to database
+                    $input['image'] = 'contacts/' . $image_name;
+                    
+                } catch (\Exception $e) {
+                    \Log::error('Image upload failed: ' . $e->getMessage());
+                    // Continue without updating image if upload fails
                 }
-                if (! empty($input['first_name'])) {
-                    $name_array[] = $input['first_name'];
-                }
-                if (! empty($input['middle_name'])) {
-                    $name_array[] = $input['middle_name'];
-                }
-                if (! empty($input['last_name'])) {
-                    $name_array[] = $input['last_name'];
-                }
-
-                $input['contact_type'] = $request->input('contact_type_radio');
-
-
-
-                $input['name'] = trim(implode(' ', $name_array));
-
-                $input['is_export'] = ! empty($request->input('is_export')) ? 1 : 0;
-
-                if (! $input['is_export']) {
-                    unset($input['export_custom_field_1'], $input['export_custom_field_2'], $input['export_custom_field_3'], $input['export_custom_field_4'], $input['export_custom_field_5'], $input['export_custom_field_6']);
-                }
-
-                if (! empty($input['dob'])) {
-                    $input['dob'] = $this->commonUtil->uf_date($input['dob']);
-                }
-
-                $input['credit_limit'] = $request->input('credit_limit') != '' ? $this->commonUtil->num_uf($request->input('credit_limit')) : null;
-
-                $business_id = $request->session()->get('user.business_id');
-
-                $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
-
-                if (! $this->moduleUtil->isSubscribed($business_id)) {
-                    return $this->moduleUtil->expiredResponse();
-                }
-
-                $output = $this->contactUtil->updateContact($input, $id, $business_id);
-
-                event(new ContactCreatedOrModified($output['data'], 'updated'));
-
-                $this->contactUtil->activityLog($output['data'], 'edited');
-            } catch (\Exception $e) {
-                \Log::emergency('File:'.$e->getFile().'Line:'.$e->getLine().'Message:'.$e->getMessage());
-
-                $output = ['success' => false,
-                    'msg' => __('messages.something_went_wrong'),
-                ];
             }
 
+            // Build full name from components
+            $name_array = [];
+            if (!empty($input['prefix'])) $name_array[] = $input['prefix'];
+            if (!empty($input['first_name'])) $name_array[] = $input['first_name'];
+            if (!empty($input['middle_name'])) $name_array[] = $input['middle_name'];
+            if (!empty($input['last_name'])) $name_array[] = $input['last_name'];
+            $input['name'] = trim(implode(' ', $name_array));
+
+            // Set contact type
+            $input['contact_type'] = $request->input('contact_type_radio');
+
+            // Handle export fields
+            $input['is_export'] = !empty($request->input('is_export')) ? 1 : 0;
+            if (!$input['is_export']) {
+                unset(
+                    $input['export_custom_field_1'], 
+                    $input['export_custom_field_2'],
+                    $input['export_custom_field_3'],
+                    $input['export_custom_field_4'],
+                    $input['export_custom_field_5'],
+                    $input['export_custom_field_6']
+                );
+            }
+
+            // Format date fields
+            if (!empty($input['dob'])) {
+                $input['dob'] = $this->commonUtil->uf_date($input['dob']);
+            }
+
+            // Format financial fields
+            $input['credit_limit'] = $request->input('credit_limit') != '' 
+                ? $this->commonUtil->num_uf($request->input('credit_limit')) 
+                : null;
+
+            $input['opening_balance'] = $this->commonUtil->num_uf($request->input('opening_balance'));
+
+            // Check subscription
+            if (!$this->moduleUtil->isSubscribed($business_id)) {
+                return $this->moduleUtil->expiredResponse();
+            }
+
+            // Update contact
+            $output = $this->contactUtil->updateContact($input, $id, $business_id);
+
+            // Fire event and log activity
+            event(new ContactCreatedOrModified($output['data'], 'updated'));
+            $this->contactUtil->activityLog($output['data'], 'edited');
+
             return $output;
+
+        } catch (\Exception $e) {
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            return [
+                'success' => false,
+                'msg' => __('messages.something_went_wrong')
+            ];
         }
+    }
+}
+
+    public function deleteImage($id)
+    {
+        try {
+            $business_id = request()->session()->get('user.business_id');
+            $contact = Contact::where('business_id', $business_id)->findOrFail($id);
+
+            // Delete the file from storage
+            if (!empty($contact->image)) {
+                $image_path = public_path('storage/' . $contact->image);
+                if (file_exists($image_path)) {
+                    unlink($image_path);
+                }
+            }
+
+            // Update the contact record
+            $contact->image = null;
+            $contact->save();
+
+            $output = ['success' => true, 'msg' => __('lang_v1.image_deleted_successfully')];
+        } catch (\Exception $e) {
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            $output = ['success' => false, 'msg' => __('messages.something_went_wrong')];
+        }
+
+        return $output;
     }
 
     /**

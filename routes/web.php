@@ -547,3 +547,6 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone'])
 Route::get('/manual-invoice/create', [ManualSellController::class, 'create'])->name('manual.invoice.create');
 Route::post('/manual-invoice', [ManualSellController::class, 'store'])->name('manual.invoice.store');
 Route::get('/manual-invoice/get-number', [ManualSellController::class, 'getInvoiceNumber'])->name('manual.invoice.getNumber');
+
+//updating image routes
+Route::post('/contacts/{id}/delete-image', [ContactController::class, 'deleteImage'])->name('contacts.delete-image');
