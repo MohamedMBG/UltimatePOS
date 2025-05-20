@@ -2028,7 +2028,7 @@ class TransactionUtil extends Util
             $show_product_description = $il->common_settings['show_product_description'] ?? null;
             $line_array = [
                 //Field for 1st column
-                'name' => $product->name,
+                'name' => !empty($line->sell_line_note) ? $line->sell_line_note : $product->name,
                 'product_description' => ! empty($show_product_description) ? $product->product_description : null,
                 'variation' => (empty($variation->name) || $variation->name == 'DUMMY') ? '' : $variation->name,
                 'product_variation' => (empty($product_variation->name) || $product_variation->name == 'DUMMY') ? '' : $product_variation->name,

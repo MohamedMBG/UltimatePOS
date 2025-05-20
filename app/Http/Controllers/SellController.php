@@ -422,6 +422,8 @@ class SellController extends Controller
                                     <li><a href="#" class="print-invoice" data-href="'.route('sell.printInvoice', [$row->id]).'?package_slip=true"><i class="fas fa-file-alt" aria-hidden="true"></i> '.__('lang_v1.packing_slip').'</a></li>';
 
                                 $html .= '<li><a href="#" class="print-invoice" data-href="'.route('sell.printInvoice', [$row->id]).'?delivery_note=true"><i class="fas fa-file-alt" aria-hidden="true"></i> '.__('lang_v1.delivery_note').'</a></li>';
+                                
+                                $html .= '<li><a href="#" class="print-manual-invoice" data-href="'.route('sell.printManualInvoice', [$row->id]).'"><i class="fas fa-file-invoice" aria-hidden="true"></i> '.__('Print Manual Invoice').'</a></li>';
                             }
                             $html .= '<li class="divider"></li>';
                             if (! $only_shipments) {
@@ -1685,5 +1687,65 @@ class SellController extends Controller
 
         echo 'Mapping reset success';
         exit;
+    }
+
+
+    /**
+     * Print manual invoice for a transaction
+     *
+     * @param  int  $transaction_id
+     * @return \Illuminate\Http\Response
+     */
+    public function printManualInvoice($transaction_id)
+    {
+        if (request()->ajax()) {
+            try {
+                $output = ['success' => 0,
+                    'msg' => trans('messages.something_went_wrong'),
+                ];
+                
+                $business_id = request()->session()->get('user.business_id');
+                $taxes = TaxRate::where('business_id', $business_id)
+                            ->pluck('name', 'id');
+                            
+                $transaction = Transaction::where('business_id', $business_id)
+                                    ->where('id', $transaction_id)
+                                    ->with(['contact', 'sell_lines' => function ($q) {
+                                        $q->whereNull('parent_sell_line_id');
+                                    }, 'sell_lines.product', 'payment_lines', 'tax'])
+                                    ->first();
+
+                $payment_types = $this->transactionUtil->payment_types(null, true, $business_id);
+                
+                $output = ['success' => 1, 'receipt' => []];
+                $output['receipt']['html_content'] = view('sell.partials.manual_invoice_print', compact('transaction', 'taxes', 'payment_types'))->render();
+                
+                return $output;
+            } catch (\Exception $e) {
+                \Log::emergency('File:' . $e->getFile() . 'Line:' . $e->getLine() . 'Message:' . $e->getMessage());
+                $output = ['success' => 0,
+                    'msg' => trans('messages.something_went_wrong'),
+                ];
+                return $output;
+            }
+        } else {
+            $business_id = request()->session()->get('user.business_id');
+            $taxes = TaxRate::where('business_id', $business_id)
+                            ->pluck('name', 'id');
+                            
+            $transaction = Transaction::where('business_id', $business_id)
+                                    ->where('id', $transaction_id)
+                                    ->with(['contact', 'sell_lines' => function ($q) {
+                                        $q->whereNull('parent_sell_line_id');
+                                    }, 'sell_lines.product', 'payment_lines', 'tax'])
+                                    ->first();
+
+            $payment_types = $this->transactionUtil->payment_types(null, true, $business_id);
+            
+            $output = ['success' => 1, 'receipt' => []];
+            $output['receipt']['html_content'] = view('sell.partials.manual_invoice_print', compact('transaction', 'taxes', 'payment_types'))->render();
+            
+            return $output;
+        }
     }
 }
