@@ -1705,9 +1705,7 @@ class SellController extends Controller
                 ];
                 
                 $business_id = request()->session()->get('user.business_id');
-                $taxes = TaxRate::where('business_id', $business_id)
-                            ->pluck('name', 'id');
-                            
+                
                 $transaction = Transaction::where('business_id', $business_id)
                                     ->where('id', $transaction_id)
                                     ->with(['contact', 'sell_lines' => function ($q) {
@@ -1715,10 +1713,12 @@ class SellController extends Controller
                                     }, 'sell_lines.product', 'payment_lines', 'tax'])
                                     ->first();
 
-                $payment_types = $this->transactionUtil->payment_types(null, true, $business_id);
-                
+                if (empty($transaction)) {
+                    return $output;
+                }
+
                 $output = ['success' => 1, 'receipt' => []];
-                $output['receipt']['html_content'] = view('sell.partials.manual_invoice_print', compact('transaction', 'taxes', 'payment_types'))->render();
+                $output['receipt']['html_content'] = view('sell.partials.print_invoice_template', compact('transaction'))->render();
                 
                 return $output;
             } catch (\Exception $e) {
@@ -1730,9 +1730,7 @@ class SellController extends Controller
             }
         } else {
             $business_id = request()->session()->get('user.business_id');
-            $taxes = TaxRate::where('business_id', $business_id)
-                            ->pluck('name', 'id');
-                            
+            
             $transaction = Transaction::where('business_id', $business_id)
                                     ->where('id', $transaction_id)
                                     ->with(['contact', 'sell_lines' => function ($q) {
@@ -1740,12 +1738,11 @@ class SellController extends Controller
                                     }, 'sell_lines.product', 'payment_lines', 'tax'])
                                     ->first();
 
-            $payment_types = $this->transactionUtil->payment_types(null, true, $business_id);
-            
-            $output = ['success' => 1, 'receipt' => []];
-            $output['receipt']['html_content'] = view('sell.partials.manual_invoice_print', compact('transaction', 'taxes', 'payment_types'))->render();
-            
-            return $output;
+            if (empty($transaction)) {
+                return ['success' => 0, 'msg' => trans('messages.something_went_wrong')];
+            }
+
+            return view('sell.partials.print_invoice_template', compact('transaction'));
         }
     }
 }
