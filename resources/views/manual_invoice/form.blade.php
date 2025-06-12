@@ -466,7 +466,9 @@
         // Cancel button action
         $('#cancel_sell_form').click(function() {
             if (confirm('Are you sure you want to cancel? All entered data will be lost.')) {
-                window.location.href = '/sells';
+                //window.location.href = '/sells';
+                window.history.back();
+
             }
         });
 
