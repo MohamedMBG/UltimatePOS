@@ -1099,6 +1099,7 @@ return [
     'use_advance_balance' => 'Use advance balance',
     'advance' => 'Advance',
     'advance_balance' => 'Advance Balance',
+    'advance_due' => 'Advance / Due',
     'advance_payment' => 'Advance payment',
     'required_advance_balance_not_available' => 'Required advance balance not available',
     'in_transit' => 'In Transit',

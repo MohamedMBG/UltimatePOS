@@ -242,6 +242,10 @@ class ContactController extends Controller
 
                 return $html;
             })
+            ->addColumn('advance_due', function ($row) {
+                $due = $row->total_purchase - $row->purchase_paid - $row->total_ledger_discount;
+                return '<span>'.__('lang_v1.advance').': '.$this->transactionUtil->num_f($row->balance, true).'</span><br><span>'.__('lang_v1.due').': '.$this->transactionUtil->num_f($due, true).'</span>';
+            })
             ->editColumn('pay_term', '
                 @if(!empty($pay_term_type) && !empty($pay_term_number))
                     {{$pay_term_number}}
@@ -274,7 +278,7 @@ class ContactController extends Controller
                     ->orWhereRaw("CONCAT(COALESCE(address_line_1, ''), ', ', COALESCE(address_line_2, ''), ', ', COALESCE(city, ''), ', ', COALESCE(state, ''), ', ', COALESCE(country, '') ) like ?", ["%{$keyword}%"]);
                 });
             })
-            ->rawColumns(['action', 'opening_balance', 'pay_term', 'due', 'return_due', 'name', 'balance'])
+            ->rawColumns(['action', 'opening_balance', 'pay_term', 'due', 'return_due', 'advance_due', 'name', 'balance'])
             ->make(true);
     }
 
@@ -469,6 +473,11 @@ class ContactController extends Controller
 
                 return $html;
             })
+            
+            ->addColumn('advance_due', function ($row) {
+                $due = $row->total_invoice - $row->invoice_received - $row->total_ledger_discount;
+                return '<span>'.__('lang_v1.advance').': '.$this->transactionUtil->num_f($row->balance, true).'</span><br><span>'.__('lang_v1.due').': '.$this->transactionUtil->num_f($due, true).'</span>';
+            })
             ->editColumn('credit_limit', function ($row) {
                 $html = __('lang_v1.no_limit');
                 if (! is_null($row->credit_limit)) {
@@ -524,7 +533,7 @@ class ContactController extends Controller
             $contacts->removeColumn('total_rp');
         }
 
-        return $contacts->rawColumns(['action', 'opening_balance', 'credit_limit', 'pay_term', 'due', 'return_due', 'name', 'balance'])
+        return $contacts->rawColumns(['action', 'opening_balance', 'credit_limit', 'pay_term', 'due', 'return_due', 'advance_due', 'name', 'balance'])
                         ->make(true);
     }
 

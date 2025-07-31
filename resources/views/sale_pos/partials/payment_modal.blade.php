@@ -18,13 +18,16 @@
                     <div class="col-md-9">
                         <div class="row">
                             <div id="payment_rows_div">
-                                @php
-                                    $pos_settings = !empty(session()->get('business.pos_settings')) ? json_decode(session()->get('business.pos_settings'), true) : [];
-                                    $show_in_pos = '';
-                                    if ($pos_settings['enable_cash_denomination_on'] == 'all_screens' || $pos_settings['enable_cash_denomination_on'] == 'pos_screen') {
-                                        $show_in_pos = true;
-                                    }
-                                @endphp
+                                
+                            @php
+                                $pos_settings = !empty(session()->get('business.pos_settings')) ? json_decode(session()->get('business.pos_settings'), true) : [];
+                                $show_in_pos = '';
+                                $enable_cash_denomination_on = $pos_settings['enable_cash_denomination_on'] ?? null;
+                                if ($enable_cash_denomination_on == 'all_screens' || $enable_cash_denomination_on == 'pos_screen') {
+                                    $show_in_pos = true;
+                                }
+                            @endphp
+
                                 @foreach ($payment_lines as $payment_line)
                                     @if ($payment_line['is_return'] == 1)
                                         @php

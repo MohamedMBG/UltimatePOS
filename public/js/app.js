@@ -386,6 +386,7 @@ $(document).ready(function() {
             { data: 'pay_term', name: 'pay_term', searchable: false, orderable: false },
             { data: 'opening_balance', name: 'opening_balance', searchable: false },
             { data: 'balance', name: 'balance', searchable: false },
+            { data: 'advance_due', name: 'advance_due', searchable: false, orderable: false },
             { data: 'created_at', name: 'contacts.created_at' },
             { data: 'address', name: 'address', orderable: false },
             { data: 'mobile', name: 'mobile' },
@@ -414,6 +415,7 @@ $(document).ready(function() {
             { data: 'pay_term', name: 'pay_term', searchable: false, orderable: false },
             { data: 'opening_balance', name: 'opening_balance', searchable: false },
             { data: 'balance', name: 'balance', searchable: false },
+            { data: 'advance_due', name: 'advance_due', searchable: false, orderable: false },
             { data: 'created_at', name: 'contacts.created_at' }
         ];
 
