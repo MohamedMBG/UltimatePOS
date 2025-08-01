@@ -145,15 +145,20 @@
 							{!! Form::select('contact_id', 
 								[], null, ['class' => 'form-control mousetrap', 'id' => 'customer_id', 'placeholder' => 'Enter Customer name / phone', 'required']); !!}
 							<span class="input-group-btn">
-								<button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-							</span>
-						</div>
-						<small class="text-danger hide contact_due_text"><strong>@lang('account.customer_due'):</strong> <span></span></small>
-					</div>
-					<small>
-					<strong>
-						@lang('lang_v1.billing_address'):
-					</strong>
+                                                        <button type="button" class="btn btn-default bg-white btn-flat add_new_customer" data-name=""><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
+                                                </span>
+                                        </div>
+                                        <small class="text-danger hide contact_due_text"><strong>@lang('account.customer_due'):</strong> <span></span></small>
+                                        <div id="customer_info_bar" class="alert alert-info hide mt-2">
+                                            <strong>@lang('account.customer_due'):</strong> <span class="customer_info_due"></span>
+                                            <span class="ml-3"><strong>Last Payment:</strong> <span class="customer_info_payment"></span></span>
+                                            <span class="ml-3"><strong>Last Product:</strong> <span class="customer_info_product"></span></span>
+                                        </div>
+                                </div>
+                                <small>
+                                <strong>
+                                        @lang('lang_v1.billing_address'):
+                                </strong>
 					<div id="billing_address_div">
 						{!! $walk_in_customer['contact_address'] ?? '' !!}
 					</div>

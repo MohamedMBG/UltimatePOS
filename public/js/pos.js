@@ -150,6 +150,9 @@ $(document).ready(function() {
         if ($('.contact_due_text').length) {
             get_contact_due(data.id);
         }
+        if ($('#customer_info_bar').length) {
+            get_contact_info(data.id);
+        }
     });
 
     set_default_customer();
@@ -2936,6 +2939,24 @@ function get_contact_due(id) {
             } else {
                 $('.contact_due_text').find('span').text('');
                 $('.contact_due_text').addClass('hide');
+            }
+        },
+    });
+}
+
+function get_contact_info(id) {
+    $.ajax({
+        method: 'get',
+        url: '/get-contact-info/' + id,
+        dataType: 'json',
+        success: function(result) {
+            if (result) {
+                $('#customer_info_bar').removeClass('hide');
+                $('#customer_info_bar .customer_info_due').text(result.due);
+                $('#customer_info_bar .customer_info_payment').text(result.last_payment);
+                $('#customer_info_bar .customer_info_product').text(result.last_product);
+            } else {
+                $('#customer_info_bar').addClass('hide');
             }
         },
     });

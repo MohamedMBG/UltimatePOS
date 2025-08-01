@@ -11,6 +11,7 @@ use App\PurchaseLine;
 use App\Transaction;
 use App\TransactionPayment;
 use App\User;
+use App\TransactionSellLine;
 use App\Utils\ContactUtil;
 use App\Utils\ModuleUtil;
 use App\Utils\NotificationUtil;
@@ -1790,6 +1791,40 @@ class ContactController extends Controller
             $due = $this->transactionUtil->getContactDue($contact_id, $business_id);
 
             $output = $due != 0 ? $this->transactionUtil->num_f($due, true) : '';
+
+            return $output;
+        }
+    }
+
+    public function getContactInfoForPos($contact_id)
+    {
+        if (request()->ajax()) {
+            $business_id = request()->session()->get('user.business_id');
+
+            $due = $this->transactionUtil->getContactDue($contact_id, $business_id);
+
+            $last_payment = TransactionPayment::leftJoin('transactions as t', 'transaction_payments.transaction_id', '=', 't.id')
+                ->where('transaction_payments.payment_for', $contact_id)
+                ->where('t.business_id', $business_id)
+                ->orderByDesc('transaction_payments.paid_on')
+                ->select('transaction_payments.method', 'transaction_payments.amount')
+                ->first();
+
+            $last_product = TransactionSellLine::join('transactions as t', 'transaction_sell_lines.transaction_id', '=', 't.id')
+                ->join('products as p', 'transaction_sell_lines.product_id', '=', 'p.id')
+                ->where('t.contact_id', $contact_id)
+                ->where('t.business_id', $business_id)
+                ->where('t.type', 'sell')
+                ->where('t.status', 'final')
+                ->orderByDesc('t.transaction_date')
+                ->select('p.name')
+                ->first();
+
+            $output = [
+                'due' => $due != 0 ? $this->transactionUtil->num_f($due, true) : '',
+                'last_payment' => ! empty($last_payment) ? $last_payment->method . ' - ' . $this->transactionUtil->num_f($last_payment->amount, true) : '',
+                'last_product' => $last_product->name ?? '',
+            ];
 
             return $output;
         }

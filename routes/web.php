@@ -145,6 +145,7 @@ Route::middleware(['setData', 'auth', 'SetSessionData', 'language', 'timezone', 
     Route::get('/contacts/data', [ContactController::class, 'data'])->name('contacts.data');
     Route::post('contacts/', [ContactController::class, 'store'])->name('contacts.store');
     Route::get('/get-contact-due/{contact_id}', [ContactController::class, 'getContactDue']);
+    Route::get('/get-contact-info/{contact_id}', [ContactController::class, 'getContactInfoForPos']);
     Route::get('/contacts/payments/{contact_id}', [ContactController::class, 'getContactPayments']);
     Route::get('/contacts/map', [ContactController::class, 'contactMap']);
     Route::get('/contacts/update-status/{id}', [ContactController::class, 'updateStatus']);
