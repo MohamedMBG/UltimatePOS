@@ -2955,6 +2955,8 @@ function get_contact_info(id) {
                 $('#customer_info_bar .customer_info_due').text(result.due);
                 $('#customer_info_bar .customer_info_payment').text(result.last_payment);
                 $('#customer_info_bar .customer_info_product').text(result.last_product);
+                $('#customer_info_bar .customer_info_phone').text(result.mobile);
+                $('#customer_info_bar .customer_info_purchase_count').text(result.purchase_count);
             } else {
                 $('#customer_info_bar').addClass('hide');
             }

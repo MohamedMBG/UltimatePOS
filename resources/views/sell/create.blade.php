@@ -153,7 +153,9 @@
                                             <strong>@lang('account.customer_due'):</strong> <span class="customer_info_due"></span>
                                             <span class="ml-3"><strong>Last Payment:</strong> <span class="customer_info_payment"></span></span>
                                             <span class="ml-3"><strong>Last Product:</strong> <span class="customer_info_product"></span></span>
-                                        </div>
+											<span class="ml-3"><strong>@lang('contact.mobile'):</strong> <span class="customer_info_phone"></span></span>
+                                            <span class="ml-3"><strong>Total Purchases:</strong> <span class="customer_info_purchase_count"></span></span>
+										</div>
                                 </div>
                                 <small>
                                 <strong>

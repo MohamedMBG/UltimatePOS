@@ -1820,10 +1820,23 @@ class ContactController extends Controller
                 ->select('p.name')
                 ->first();
 
+            $contact = Contact::where('business_id', $business_id)
+                ->where('id', $contact_id)
+                ->select('mobile')
+                ->first();
+
+            $purchase_count = Transaction::where('business_id', $business_id)
+                ->where('contact_id', $contact_id)
+                ->where('type', 'sell')
+                ->where('status', 'final')
+                ->count();
+
             $output = [
                 'due' => $due != 0 ? $this->transactionUtil->num_f($due, true) : '',
                 'last_payment' => ! empty($last_payment) ? $last_payment->method . ' - ' . $this->transactionUtil->num_f($last_payment->amount, true) : '',
                 'last_product' => $last_product->name ?? '',
+                'mobile' => $contact->mobile ?? '',
+                'purchase_count' => $purchase_count,
             ];
 
             return $output;
